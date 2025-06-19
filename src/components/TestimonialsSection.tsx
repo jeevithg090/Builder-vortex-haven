@@ -115,6 +115,7 @@ const TestimonialsSection = () => {
   const [currentPhase, setCurrentPhase] = useState<
     "intro" | "split" | "fullscreen"
   >("intro");
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -149,6 +150,12 @@ const TestimonialsSection = () => {
     }
   }, [activeIndex]);
 
+  // Initialize loaded state
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoaded(true), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Split animation transforms
   const splitProgress = useTransform(scrollYProgress, [0.15, 0.4], [0, 1]);
   const leftSplit = useTransform(splitProgress, [0, 1], [0, -400]);
@@ -163,6 +170,28 @@ const TestimonialsSection = () => {
     >
       {/* Sticky Container */}
       <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
+        {/* Loading State */}
+        {!isLoaded && (
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+          >
+            <div className="text-center text-white">
+              <motion.div
+                className="w-12 h-12 border-4 border-purple-500/30 border-t-purple-500 rounded-full mx-auto mb-4"
+                animate={{ rotate: 360 }}
+                transition={{
+                  duration: 1,
+                  repeat: Infinity,
+                  ease: "linear",
+                }}
+              />
+              <p className="text-purple-300">Loading testimonials...</p>
+            </div>
+          </motion.div>
+        )}
         {/* Phase 1: Intro with all testimonials */}
         {currentPhase === "intro" && (
           <motion.div
