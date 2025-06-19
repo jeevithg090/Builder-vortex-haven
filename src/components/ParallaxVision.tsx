@@ -62,7 +62,7 @@ const ParallaxVision = () => {
       {/* Parallax Section */}
       <div
         ref={containerRef}
-        className="relative h-[200vh] overflow-hidden bg-black"
+        className="relative h-[200vh] overflow-hidden bg-background"
       >
         {/* Background Layer - Room Image */}
         <motion.div
@@ -93,9 +93,11 @@ const ParallaxVision = () => {
             <div className="absolute top-1/2 left-1/4 w-40 h-48 bg-black/15 rounded-t-full" />
 
             {/* UI overlay elements - Los Angeles timestamp */}
-            <div className="absolute bottom-8 left-8 bg-black/50 backdrop-blur-sm rounded-lg p-3">
-              <div className="text-white text-sm font-medium">Los Angeles</div>
-              <div className="text-white/70 text-xs">May 5 1:56 PM</div>
+            <div className="absolute bottom-8 left-8 bg-background/50 backdrop-blur-sm rounded-lg p-3 border border-border">
+              <div className="text-foreground text-sm font-medium">
+                Los Angeles
+              </div>
+              <div className="text-muted-foreground text-xs">May 5 1:56 PM</div>
             </div>
           </div>
         </motion.div>
@@ -109,12 +111,12 @@ const ParallaxVision = () => {
           }}
           className="absolute inset-0 flex items-center justify-center z-10"
         >
-          <div className="text-center text-white max-w-2xl px-8">
+          <div className="text-center text-foreground max-w-2xl px-8">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-sm uppercase tracking-wider text-gray-300 mb-4"
+              className="text-sm uppercase tracking-wider text-muted-foreground mb-4"
             >
               Connection
             </motion.p>
@@ -134,17 +136,17 @@ const ParallaxVision = () => {
           style={{ y: useTransform(scrollYProgress, [0, 1], [0, -50]) }}
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20"
         >
-          <div className="flex space-x-3 bg-black/30 backdrop-blur-sm rounded-full px-6 py-3">
+          <div className="flex space-x-3 bg-background/30 backdrop-blur-sm rounded-full px-6 py-3 border border-border">
             {thumbnails}
           </div>
         </motion.div>
 
         {/* Gradient overlay for smooth transition */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-white to-transparent z-30" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent z-30" />
       </div>
 
       {/* Transition Section - New Content */}
-      <section className="relative bg-white py-20 px-8 min-h-screen flex items-center">
+      <section className="relative bg-background py-20 px-8 min-h-screen flex items-center">
         <div className="max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
@@ -153,7 +155,7 @@ const ParallaxVision = () => {
             viewport={{ once: true }}
             className="space-y-8"
           >
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
               A more engaging way to get together.
             </h2>
 
