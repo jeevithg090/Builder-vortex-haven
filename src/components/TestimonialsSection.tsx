@@ -299,9 +299,34 @@ const TestimonialsSection = () => {
           )}
         </AnimatePresence>
 
+        {/* Fallback Traditional View */}
+        {shouldShowFallback && (
+          <div className="absolute inset-0 flex items-center justify-center p-20">
+            <div className="max-w-4xl text-center">
+              <h1 className="text-6xl font-bold text-white mb-8">
+                Client Success Stories
+              </h1>
+              <p className="text-xl text-gray-300 mb-12">
+                Scroll to experience our testimonials in an immersive way
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {testimonials.slice(0, 2).map((testimonial, index) => (
+                  <TestimonialCard
+                    key={testimonial.id}
+                    testimonial={testimonial}
+                    index={index}
+                    isInView={true}
+                    isActive={index === 0}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Fullscreen Testimonial Experience */}
         <AnimatePresence>
-          {isFullscreen && (
+          {(isFullscreen || scrollYProgress.get() > 0.2) && (
             <motion.div
               className="absolute inset-0 bg-gradient-to-br from-black via-purple-900 to-black"
               style={{
