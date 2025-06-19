@@ -7,7 +7,7 @@ import PricingSection from "@/components/PricingSection";
 import RippleEffect from "@/components/RippleEffect";
 import ScrollVideoSection from "@/components/ScrollVideoSection";
 import BrandKits from "@/components/BrandKits";
-import PortfolioStats from "@/components/PortfolioStats";
+
 import ParallaxVision from "@/components/ParallaxVision";
 import ShowcaseWork from "@/components/ShowcaseWork";
 import StrikingBackground from "@/components/StrikingBackground";
