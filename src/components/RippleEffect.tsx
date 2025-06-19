@@ -336,13 +336,9 @@ const RippleEffect = () => {
     };
   }, [isSupported]);
 
-  if (!isSupported) {
-    // CSS-based fallback with simple ripple animations
-    const [cssRipples, setCssRipples] = useState<
-      Array<{ id: number; x: number; y: number }>
-    >([]);
-
-    useEffect(() => {
+  useEffect(() => {
+    if (!isSupported) {
+      // CSS-based fallback with simple ripple animations
       const handleMouseMove = (e: MouseEvent) => {
         const newRipple = {
           id: Date.now() + Math.random(),
