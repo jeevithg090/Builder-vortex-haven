@@ -515,7 +515,7 @@ const ShowcaseWork = () => {
             exit={{ opacity: 0 }}
             onClick={() => setShowAllProjects(false)}
           >
-            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+            <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
             <motion.div
               className="relative bg-white rounded-3xl max-w-6xl w-full max-h-[90vh] overflow-y-auto"
               initial={{ scale: 0.8, opacity: 0 }}
