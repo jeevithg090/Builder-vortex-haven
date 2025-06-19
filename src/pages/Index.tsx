@@ -5,6 +5,7 @@ import Navigation from "@/components/Navigation";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import PricingSection from "@/components/PricingSection";
 import RippleEffect from "@/components/RippleEffect";
+import ScrollVideoSection from "@/components/ScrollVideoSection";
 
 const Index = () => {
   const [loading, setLoading] = useState(true);
@@ -150,6 +151,9 @@ const Index = () => {
 
             {/* Pricing Section */}
             <PricingSection />
+
+            {/* Scroll Video Section */}
+            <ScrollVideoSection />
 
             {/* Footer */}
             <footer className="bg-gray-900 text-white py-12">
