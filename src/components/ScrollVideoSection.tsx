@@ -24,23 +24,23 @@ const ScrollVideoSection = () => {
     setScrollProgress(latest);
   });
 
-  // Video card transformations - starts small, grows to fullscreen with clearer 90% threshold
+  // Simple video card pop-up animation on scroll
   const videoScale = useTransform(
     scrollYProgress,
-    [0, 0.3, 0.7, 1],
-    [0.3, 0.6, 0.9, 1], // More dramatic progression, clearly shows 90% at 0.7 progress
+    [0, 0.5, 1],
+    [0.4, 0.8, 1], // Card pops up as you scroll
   );
 
   const videoWidth = useTransform(
     scrollYProgress,
     [0, 0.3, 0.7, 1],
-    ["40%", "70%", "90%", "100%"], // Clear 90% threshold at 0.7 progress
+    ["60%", "80%", "95%", "100%"], // Card width grows
   );
 
   const videoHeight = useTransform(
     scrollYProgress,
     [0, 0.3, 0.7, 1],
-    ["30vh", "60vh", "90vh", "100vh"], // Clear 90% threshold at 0.7 progress
+    ["50vh", "70vh", "90vh", "100vh"], // Card height grows
   );
 
   const videoBorderRadius = useTransform(
