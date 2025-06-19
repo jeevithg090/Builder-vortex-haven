@@ -32,7 +32,7 @@ const Navigation = () => {
     <motion.nav
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
         isScrolled
-          ? "bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg shadow-lg"
+          ? "bg-background/90 backdrop-blur-lg shadow-lg border-b border-border"
           : "bg-transparent"
       }`}
       initial={{ y: -100 }}
@@ -49,7 +49,11 @@ const Navigation = () => {
           >
             <a
               href="#home"
-              className="text-xl font-bold text-white hover:text-light-purple transition-colors"
+              className={`text-xl font-bold transition-colors ${
+                isScrolled
+                  ? "text-foreground hover:text-purple-600"
+                  : "text-white hover:text-light-purple"
+              }`}
             >
               The Agency
             </a>
@@ -62,7 +66,11 @@ const Navigation = () => {
                 <motion.a
                   key={item.label}
                   href={item.href}
-                  className="text-white hover:text-light-purple transition-colors px-3 py-2 rounded-md text-sm font-medium"
+                  className={`transition-colors px-3 py-2 rounded-md text-sm font-medium ${
+                    isScrolled
+                      ? "text-foreground hover:text-purple-600"
+                      : "text-white hover:text-light-purple"
+                  }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
@@ -77,28 +85,44 @@ const Navigation = () => {
             {/* Theme Toggle */}
             <motion.button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+              className={`p-2 rounded-lg transition-colors ${
+                isScrolled
+                  ? "bg-muted hover:bg-muted/80"
+                  : "bg-white/10 hover:bg-white/20"
+              }`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               {theme === "dark" ? (
-                <Sun className="w-5 h-5 text-white" />
+                <Sun
+                  className={`w-5 h-5 ${isScrolled ? "text-foreground" : "text-white"}`}
+                />
               ) : (
-                <Moon className="w-5 h-5 text-white" />
+                <Moon
+                  className={`w-5 h-5 ${isScrolled ? "text-foreground" : "text-white"}`}
+                />
               )}
             </motion.button>
 
             {/* Mobile Menu Button */}
             <motion.button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+              className={`md:hidden p-2 rounded-lg transition-colors ${
+                isScrolled
+                  ? "bg-muted hover:bg-muted/80"
+                  : "bg-white/10 hover:bg-white/20"
+              }`}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               {isMobileMenuOpen ? (
-                <X className="w-5 h-5 text-white" />
+                <X
+                  className={`w-5 h-5 ${isScrolled ? "text-foreground" : "text-white"}`}
+                />
               ) : (
-                <Menu className="w-5 h-5 text-white" />
+                <Menu
+                  className={`w-5 h-5 ${isScrolled ? "text-foreground" : "text-white"}`}
+                />
               )}
             </motion.button>
           </div>
@@ -114,12 +138,22 @@ const Navigation = () => {
           }}
           transition={{ duration: 0.3 }}
         >
-          <div className="px-2 pt-2 pb-3 space-y-1 bg-white/10 backdrop-blur-lg rounded-lg mt-2">
+          <div
+            className={`px-2 pt-2 pb-3 space-y-1 backdrop-blur-lg rounded-lg mt-2 ${
+              isScrolled
+                ? "bg-background/95 border border-border"
+                : "bg-white/10"
+            }`}
+          >
             {navItems.map((item) => (
               <a
                 key={item.label}
                 href={item.href}
-                className="block px-3 py-2 rounded-md text-base font-medium text-white hover:text-light-purple hover:bg-white/10 transition-colors"
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  isScrolled
+                    ? "text-foreground hover:text-purple-600 hover:bg-muted/50"
+                    : "text-white hover:text-light-purple hover:bg-white/10"
+                }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {item.label}

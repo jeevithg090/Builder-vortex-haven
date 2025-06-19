@@ -41,7 +41,7 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        className="fixed inset-0 z-50 bg-black overflow-hidden flex items-center justify-center"
+        className="fixed inset-0 z-50 bg-background overflow-hidden flex items-center justify-center"
         initial={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.4 }}
@@ -52,17 +52,17 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
             {/* Progress bar */}
             <div className="relative">
               {/* Background bar */}
-              <div className="bg-gray-800 h-6 w-60 rounded-sm overflow-hidden">
+              <div className="bg-muted h-6 w-60 rounded-sm overflow-hidden">
                 {/* Progress fill */}
                 <motion.div
-                  className="bg-white h-full"
+                  className="bg-foreground h-full"
                   style={{ width: `${barWidth}px` }}
                   transition={{ duration: 0.05, ease: "linear" }}
                 />
               </div>
             </div>
             {/* Progress number counting up */}
-            <div className="fixed bottom-8 left-8 text-white text-8xl font-bold">
+            <div className="fixed bottom-8 left-8 text-foreground text-8xl font-bold">
               {String(progress).padStart(3, "0")}
             </div>
           </>
@@ -74,7 +74,7 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
             <div className="relative">
               {/* Horizontal bar that will break */}
               <motion.div
-                className="bg-white absolute"
+                className="bg-foreground absolute"
                 style={{ width: "200px", height: "24px", left: "32px" }}
                 initial={{ opacity: 1 }}
                 animate={{ opacity: 1 }}
@@ -83,7 +83,7 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
 
               {/* Left piece that breaks off and rotates */}
               <motion.div
-                className="bg-white absolute"
+                className="bg-foreground absolute"
                 style={{
                   width: "24px",
                   height: "120px",
@@ -111,7 +111,7 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
               />
             </div>
             {/* "100" text fixed bottom left */}
-            <div className="fixed bottom-8 left-8 text-white text-8xl font-bold">
+            <div className="fixed bottom-8 left-8 text-foreground text-8xl font-bold">
               100
             </div>
           </>
@@ -128,7 +128,7 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
             >
               {/* Vertical part of L */}
               <motion.div
-                className="bg-white absolute"
+                className="bg-foreground absolute"
                 style={{ width: "32px", height: "120px", x: 0, y: -120 }}
                 initial={{ opacity: 0.8 }}
                 animate={{ opacity: 1 }}
@@ -136,7 +136,7 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
               />
               {/* Horizontal part of L */}
               <motion.div
-                className="bg-white absolute"
+                className="bg-foreground absolute"
                 style={{ width: "96px", height: "32px", x: 0, y: 0 }}
                 initial={{ opacity: 0.8 }}
                 animate={{ opacity: 1 }}
@@ -154,7 +154,7 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
         {animationPhase === 4 && (
           <>
             <motion.div
-              className="bg-white"
+              className="bg-foreground"
               initial={{ width: "96px", height: "32px" }}
               animate={{ width: "200px", height: "20px" }}
               transition={{ duration: 0.7, ease: "easeOut" }}
@@ -169,7 +169,7 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
         {/* Phase 5: Diagonal wipe and content reveal */}
         {animationPhase === 5 && (
           <motion.div
-            className="absolute inset-0 bg-white"
+            className="absolute inset-0 bg-background"
             initial={{
               clipPath: "polygon(0 100%, 0 100%, 0 100%)",
             }}

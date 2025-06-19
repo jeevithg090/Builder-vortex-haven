@@ -290,7 +290,7 @@ const ShowcaseWork = () => {
                         alt={project.title}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
-                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-colors duration-300 flex flex-col justify-between p-6">
+                      <div className="absolute inset-0 bg-background/40 group-hover:bg-background/60 transition-colors duration-300 flex flex-col justify-between p-6">
                         <div className="flex justify-between items-start">
                           <div className="text-white">
                             <div className="text-lg font-bold mb-1">
@@ -368,9 +368,9 @@ const ShowcaseWork = () => {
             exit={{ opacity: 0 }}
             onClick={() => setSelectedProject(null)}
           >
-            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+            <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
             <motion.div
-              className="relative bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              className="relative bg-background rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto border border-border"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
@@ -385,7 +385,7 @@ const ShowcaseWork = () => {
                 />
                 <button
                   onClick={() => setSelectedProject(null)}
-                  className="absolute top-4 right-4 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+                  className="absolute top-4 right-4 w-10 h-10 bg-background/50 rounded-full flex items-center justify-center text-foreground hover:bg-background/70 transition-colors backdrop-blur-sm border border-border"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -515,7 +515,7 @@ const ShowcaseWork = () => {
             exit={{ opacity: 0 }}
             onClick={() => setShowAllProjects(false)}
           >
-            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+            <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
             <motion.div
               className="relative bg-white rounded-3xl max-w-6xl w-full max-h-[90vh] overflow-y-auto"
               initial={{ scale: 0.8, opacity: 0 }}
