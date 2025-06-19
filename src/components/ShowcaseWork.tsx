@@ -33,6 +33,8 @@ interface Project {
 const ShowcaseWork = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [currentProject, setCurrentProject] = useState(0);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [showAllProjects, setShowAllProjects] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
