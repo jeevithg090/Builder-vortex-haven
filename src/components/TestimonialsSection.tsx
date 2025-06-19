@@ -172,166 +172,355 @@ const TestimonialsSection = () => {
   return (
     <section
       id="testimonials"
-      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black overflow-hidden"
+      className="relative h-[500vh] bg-black overflow-hidden"
       ref={containerRef}
     >
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          className="absolute top-1/4 left-1/6 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
-        <motion.div
-          className="absolute bottom-1/4 right-1/6 w-80 h-80 bg-pink-500/10 rounded-full blur-3xl"
-          animate={{
-            scale: [1.3, 1, 1.3],
-            opacity: [0.6, 0.3, 0.6],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        />
+      {/* Insane Particle System */}
+      <div className="fixed inset-0 pointer-events-none">
+        {Array.from({ length: 50 }).map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              rotate: particleRotation,
+              scale: particleScale,
+            }}
+            animate={{
+              x: [0, Math.random() * 200 - 100],
+              y: [0, Math.random() * 200 - 100],
+              opacity: [0, 1, 0],
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 2,
+            }}
+          />
+        ))}
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        {/* Header Section */}
-        <motion.div
-          className="text-center mb-20"
-          initial={{ opacity: 0, y: 50 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-        >
-          <motion.div
-            className="flex items-center justify-center gap-4 mb-6"
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ delay: 0.2, duration: 0.6 }}
-          >
-            <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-purple-500"></div>
-            <div className="flex items-center gap-2 text-purple-400 text-sm font-semibold tracking-wider uppercase">
-              <Award className="w-4 h-4" />
-              Client Success Stories
-            </div>
-            <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-purple-500"></div>
-          </motion.div>
+      {/* Sticky Container for Split Animation */}
+      <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
+        {/* Initial Split Cards */}
+        <AnimatePresence>
+          {splitProgress.get() < 1 && (
+            <>
+              {/* Left Split */}
+              <motion.div
+                className="absolute left-1/2 w-1/2 h-full bg-gradient-to-br from-purple-900 to-purple-800 flex items-center justify-center"
+                style={{
+                  x: leftSplit,
+                  scale: splitScale,
+                  rotate: splitRotate,
+                  transformOrigin: "right center",
+                }}
+              >
+                <div className="text-center text-white p-12">
+                  <motion.div
+                    className="text-8xl font-black mb-6 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent"
+                    animate={{
+                      scale: [1, 1.1, 1],
+                      rotateY: [0, 10, 0],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                    }}
+                  >
+                    CLIENT
+                  </motion.div>
+                  <motion.div
+                    className="text-2xl opacity-80"
+                    animate={{
+                      opacity: [0.8, 1, 0.8],
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                    }}
+                  >
+                    SUCCESS
+                  </motion.div>
+                </div>
+              </motion.div>
 
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
-            {isInView && (
-              <TypewriterText text="Trusted by Industry Leaders" delay={500} />
-            )}
-          </h1>
+              {/* Right Split */}
+              <motion.div
+                className="absolute right-1/2 w-1/2 h-full bg-gradient-to-bl from-pink-900 to-pink-800 flex items-center justify-center"
+                style={{
+                  x: rightSplit,
+                  scale: splitScale,
+                  rotate: splitRotate,
+                  transformOrigin: "left center",
+                }}
+              >
+                <div className="text-center text-white p-12">
+                  <motion.div
+                    className="text-8xl font-black mb-6 bg-gradient-to-r from-white to-pink-200 bg-clip-text text-transparent"
+                    animate={{
+                      scale: [1, 1.1, 1],
+                      rotateY: [0, -10, 0],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      delay: 0.5,
+                    }}
+                  >
+                    STORIES
+                  </motion.div>
+                  <motion.div
+                    className="text-2xl opacity-80"
+                    animate={{
+                      opacity: [0.8, 1, 0.8],
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      delay: 0.5,
+                    }}
+                  >
+                    REVEALED
+                  </motion.div>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
 
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Don't just take our word for it. See what our clients say about
-            their transformative experiences with The Agency.
-          </p>
-        </motion.div>
-
-        {/* Split Layout Testimonials */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          {/* Left Column */}
-          <motion.div className="space-y-8" style={{ y: leftColumnY }}>
-            {leftTestimonials.map((testimonial, index) => (
-              <TestimonialCard
-                key={testimonial.id}
-                testimonial={testimonial}
-                index={index * 2}
-                isInView={isInView}
-                isActive={activeIndex === index * 2}
-              />
-            ))}
-          </motion.div>
-
-          {/* Center Stats */}
-          <motion.div
-            className="flex flex-col items-center justify-center space-y-12 py-12"
-            style={{ scale: centerScale }}
-          >
+        {/* Fullscreen Testimonial Experience */}
+        <AnimatePresence>
+          {isFullscreen && (
             <motion.div
-              className="text-center"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ delay: 1, duration: 0.8 }}
+              className="absolute inset-0 bg-gradient-to-br from-black via-purple-900 to-black"
+              style={{
+                scale: fullscreenScale,
+                opacity: fullscreenOpacity,
+              }}
+              initial={{ scale: 0.3, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.3, opacity: 0 }}
+              transition={{ duration: 1, ease: "easeInOut" }}
             >
-              <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center shadow-2xl">
-                <Users className="w-16 h-16 text-white" />
+              {/* Active Testimonial with Insane Transitions */}
+              <div className="relative h-full flex items-center justify-center p-20">
+                {/* Background Morphing Shapes */}
+                <motion.div
+                  className="absolute inset-0 opacity-20"
+                  animate={{
+                    background: [
+                      "radial-gradient(circle at 20% 80%, purple 0%, transparent 50%)",
+                      "radial-gradient(circle at 80% 20%, pink 0%, transparent 50%)",
+                      "radial-gradient(circle at 40% 40%, blue 0%, transparent 50%)",
+                    ],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                  }}
+                />
+
+                {/* Testimonial Content */}
+                <motion.div
+                  key={activeIndex}
+                  className="relative z-10 max-w-6xl text-center"
+                  initial={{
+                    opacity: 0,
+                    scale: 0.8,
+                    rotateX: 90,
+                    y: 100,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    scale: 1,
+                    rotateX: 0,
+                    y: 0,
+                  }}
+                  exit={{
+                    opacity: 0,
+                    scale: 1.2,
+                    rotateX: -90,
+                    y: -100,
+                  }}
+                  transition={{
+                    duration: 0.8,
+                    ease: "easeInOut",
+                  }}
+                >
+                  {/* Quote with Insane Typography */}
+                  <motion.blockquote
+                    className="text-4xl md:text-6xl font-light text-white mb-12 leading-relaxed"
+                    style={{
+                      textShadow: "0 0 30px rgba(255,255,255,0.3)",
+                    }}
+                    animate={{
+                      textShadow: [
+                        "0 0 30px rgba(255,255,255,0.3)",
+                        "0 0 50px rgba(138,43,226,0.5)",
+                        "0 0 30px rgba(255,105,180,0.4)",
+                        "0 0 30px rgba(255,255,255,0.3)",
+                      ],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                    }}
+                  >
+                    "{testimonials[activeIndex]?.text}"
+                  </motion.blockquote>
+
+                  {/* Author Info with 3D Effect */}
+                  <motion.div
+                    className="flex items-center justify-center gap-8"
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5, duration: 0.6 }}
+                  >
+                    {/* Avatar with Crazy Border */}
+                    <motion.div
+                      className="relative"
+                      animate={{
+                        rotateY: [0, 360],
+                      }}
+                      transition={{
+                        duration: 8,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                    >
+                      <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xl font-bold relative">
+                        <motion.div
+                          className="absolute inset-0 rounded-full border-4 border-white/50"
+                          animate={{
+                            scale: [1, 1.2, 1],
+                            opacity: [0.5, 1, 0.5],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                          }}
+                        />
+                        {testimonials[activeIndex]?.author
+                          .split(" ")
+                          .map((n: string) => n[0])
+                          .join("")}
+                      </div>
+                    </motion.div>
+
+                    {/* Author Details */}
+                    <div className="text-left">
+                      <motion.h3
+                        className="text-3xl font-bold text-white mb-2"
+                        animate={{
+                          backgroundPosition: ["0%", "100%"],
+                        }}
+                        style={{
+                          background:
+                            "linear-gradient(90deg, #fff, #a855f7, #ec4899, #fff)",
+                          backgroundSize: "200% 100%",
+                          WebkitBackgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                          backgroundClip: "text",
+                        }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: "linear",
+                        }}
+                      >
+                        {testimonials[activeIndex]?.author}
+                      </motion.h3>
+                      <p className="text-purple-300 text-xl">
+                        {testimonials[activeIndex]?.role}
+                      </p>
+                      <p className="text-pink-300 text-lg font-semibold">
+                        {testimonials[activeIndex]?.company}
+                      </p>
+                    </div>
+                  </motion.div>
+
+                  {/* Project Type Badge */}
+                  <motion.div
+                    className="mt-8 inline-block px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20"
+                    whileHover={{ scale: 1.1 }}
+                    animate={{
+                      boxShadow: [
+                        "0 0 20px rgba(138,43,226,0.3)",
+                        "0 0 40px rgba(255,105,180,0.4)",
+                        "0 0 20px rgba(138,43,226,0.3)",
+                      ],
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                    }}
+                  >
+                    <span className="text-white font-semibold">
+                      {testimonials[activeIndex]?.project}
+                    </span>
+                  </motion.div>
+                </motion.div>
+
+                {/* Progress Indicator with Insane Design */}
+                <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2">
+                  <div className="flex gap-4">
+                    {testimonials.map((_, index) => (
+                      <motion.div
+                        key={index}
+                        className={`w-4 h-4 rounded-full border-2 ${
+                          index === activeIndex
+                            ? "bg-white border-white"
+                            : "bg-transparent border-white/50"
+                        }`}
+                        animate={
+                          index === activeIndex
+                            ? {
+                                scale: [1, 1.5, 1],
+                                rotate: [0, 360],
+                                boxShadow: [
+                                  "0 0 0px rgba(255,255,255,0.5)",
+                                  "0 0 20px rgba(255,255,255,0.8)",
+                                  "0 0 0px rgba(255,255,255,0.5)",
+                                ],
+                              }
+                            : {}
+                        }
+                        transition={{
+                          duration: 1,
+                          repeat: index === activeIndex ? Infinity : 0,
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Floating Elements */}
+                {Array.from({ length: 20 }).map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-1 h-1 bg-white rounded-full opacity-50"
+                    style={{
+                      left: `${Math.random() * 100}%`,
+                      top: `${Math.random() * 100}%`,
+                    }}
+                    animate={{
+                      y: [0, -100, 0],
+                      opacity: [0, 1, 0],
+                      scale: [0, 1, 0],
+                    }}
+                    transition={{
+                      duration: 3 + Math.random() * 2,
+                      repeat: Infinity,
+                      delay: Math.random() * 2,
+                    }}
+                  />
+                ))}
               </div>
-              <div className="text-5xl font-bold text-white mb-2">150+</div>
-              <div className="text-gray-300 font-medium">Happy Clients</div>
             </motion.div>
-
-            <motion.div
-              className="grid grid-cols-2 gap-8 text-center"
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 1.2, duration: 0.8 }}
-            >
-              <div>
-                <div className="text-3xl font-bold text-white mb-1">98%</div>
-                <div className="text-sm text-gray-400">Satisfaction Rate</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-white mb-1">250%</div>
-                <div className="text-sm text-gray-400">Avg. Growth</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-white mb-1">5★</div>
-                <div className="text-sm text-gray-400">Average Rating</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-white mb-1">24h</div>
-                <div className="text-sm text-gray-400">Response Time</div>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Column */}
-          <motion.div className="space-y-8" style={{ y: rightColumnY }}>
-            {rightTestimonials.map((testimonial, index) => (
-              <TestimonialCard
-                key={testimonial.id}
-                testimonial={testimonial}
-                index={index * 2 + 1}
-                isInView={isInView}
-                isActive={activeIndex === index * 2 + 1}
-              />
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Bottom CTA */}
-        <motion.div
-          className="text-center mt-20"
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ delay: 2, duration: 0.8 }}
-        >
-          <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-8 text-center">
-            <h3 className="text-2xl font-bold text-white mb-4">
-              Ready to Join Our Success Stories?
-            </h3>
-            <p className="text-purple-100 mb-6">
-              Let's create something amazing together
-            </p>
-            <motion.button
-              className="bg-white text-purple-600 font-bold py-3 px-8 rounded-xl hover:bg-gray-100 transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Start Your Project
-            </motion.button>
-          </div>
-        </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </section>
   );
