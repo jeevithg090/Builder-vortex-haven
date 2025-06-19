@@ -22,7 +22,7 @@ const RippleEffect = () => {
     attribute vec2 a_position;
     attribute vec2 a_texCoord;
     varying vec2 v_texCoord;
-    
+
     void main() {
       gl_Position = vec4(a_position, 0.0, 1.0);
       v_texCoord = a_texCoord;
@@ -38,14 +38,14 @@ const RippleEffect = () => {
     uniform vec2 u_ripples[10];
     uniform float u_rippleTimes[10];
     uniform int u_rippleCount;
-    
+
     // Iridescent color function
     vec3 getIridescentColor(float phase) {
       vec3 color1 = vec3(1.0, 0.8, 0.9); // Pink
       vec3 color2 = vec3(0.8, 0.9, 1.0); // Light blue
       vec3 color3 = vec3(1.0, 1.0, 0.8); // Light yellow
       vec3 color4 = vec3(0.9, 0.8, 1.0); // Light purple
-      
+
       float t = fract(phase * 4.0);
       if (t < 0.25) {
         return mix(color1, color2, t * 4.0);
@@ -57,51 +57,51 @@ const RippleEffect = () => {
         return mix(color4, color1, (t - 0.75) * 4.0);
       }
     }
-    
+
     void main() {
       vec2 uv = v_texCoord;
       vec3 baseColor = vec3(0.878, 0.898, 0.925); // #E0E5EC
       vec3 finalColor = baseColor;
-      
+
       for (int i = 0; i < 10; i++) {
         if (i >= u_rippleCount) break;
-        
+
         vec2 ripplePos = u_ripples[i] / u_resolution;
         float rippleTime = u_rippleTimes[i];
-        
+
         if (rippleTime > 0.0) {
           float dist = distance(uv, ripplePos);
           float rippleRadius = rippleTime * 0.3; // Adjust expansion speed
           float rippleWidth = 0.02; // Width of the ripple edge
-          
+
           // Create ripple wave
           float wave = abs(dist - rippleRadius);
-          float rippleIntensity = smoothstep(rippleWidth, 0.0, wave) * 
+          float rippleIntensity = smoothstep(rippleWidth, 0.0, wave) *
                                   (1.0 - smoothstep(0.8, 1.0, rippleTime));
-          
+
           if (rippleIntensity > 0.0) {
             // Iridescent edge effect
             float phase = dist * 20.0 - rippleTime * 5.0;
             vec3 iridescentColor = getIridescentColor(phase);
-            
+
             // Subtle distortion in the interior
             float distortionMask = smoothstep(rippleRadius - 0.05, rippleRadius, dist) *
                                    (1.0 - smoothstep(rippleRadius, rippleRadius + 0.05, dist));
             vec2 distortionOffset = normalize(uv - ripplePos) * sin(rippleTime * 6.28) * 0.002;
-            
+
             // Apply iridescent edge
-            finalColor = mix(finalColor, iridescentColor * 0.3 + baseColor, 
+            finalColor = mix(finalColor, iridescentColor * 0.3 + baseColor,
                            rippleIntensity * 0.6);
-            
+
             // Apply subtle background distortion
             if (dist < rippleRadius) {
-              finalColor += vec3(0.02, 0.01, 0.03) * sin(dist * 50.0 - rippleTime * 10.0) * 
+              finalColor += vec3(0.02, 0.01, 0.03) * sin(dist * 50.0 - rippleTime * 10.0) *
                            (1.0 - rippleTime) * 0.5;
             }
           }
         }
       }
-      
+
       gl_FragColor = vec4(finalColor, 1.0);
     }
   `;
@@ -314,12 +314,64 @@ const RippleEffect = () => {
   }, [isSupported]);
 
   if (!isSupported) {
-    // Fallback to solid background
+    // CSS-based fallback with simple ripple animations
+    const [cssRipples, setCssRipples] = useState<
+      Array<{ id: number; x: number; y: number }>
+    >([]);
+
+    useEffect(() => {
+      const handleMouseMove = (e: MouseEvent) => {
+        const newRipple = {
+          id: Date.now() + Math.random(),
+          x: e.clientX,
+          y: e.clientY,
+        };
+
+        setCssRipples((prev) => [...prev.slice(-4), newRipple]); // Keep only 5 ripples
+
+        // Remove ripple after animation
+        setTimeout(() => {
+          setCssRipples((prev) => prev.filter((r) => r.id !== newRipple.id));
+        }, 3000);
+      };
+
+      let throttleTimer: NodeJS.Timeout | null = null;
+      const throttledMouseMove = (e: MouseEvent) => {
+        if (throttleTimer) return;
+        throttleTimer = setTimeout(() => {
+          handleMouseMove(e);
+          throttleTimer = null;
+        }, 200);
+      };
+
+      window.addEventListener("mousemove", throttledMouseMove);
+      return () => {
+        window.removeEventListener("mousemove", throttledMouseMove);
+        if (throttleTimer) clearTimeout(throttleTimer);
+      };
+    }, []);
+
     return (
       <div
-        className="fixed inset-0 pointer-events-none"
+        className="fixed inset-0 pointer-events-none overflow-hidden"
         style={{ backgroundColor: "#E0E5EC", zIndex: -1 }}
-      />
+      >
+        {cssRipples.map((ripple) => (
+          <div
+            key={ripple.id}
+            className="absolute rounded-full border-2 border-pink-200/30 animate-ping"
+            style={{
+              left: ripple.x - 50,
+              top: ripple.y - 50,
+              width: 100,
+              height: 100,
+              animationDuration: "3s",
+              background:
+                "radial-gradient(circle, rgba(255,182,193,0.1) 0%, rgba(221,160,221,0.1) 50%, rgba(173,216,230,0.1) 100%)",
+            }}
+          />
+        ))}
+      </div>
     );
   }
 
