@@ -101,7 +101,24 @@ const RippleEffect = () => {
         }
       }
 
-      gl_FragColor = vec4(finalColor, 1.0);
+      // Calculate alpha based on ripple effects
+      float alpha = 0.0;
+      for (int i = 0; i < 10; i++) {
+        if (i >= u_rippleCount) break;
+        vec2 ripplePos = u_ripples[i] / u_resolution;
+        float rippleTime = u_rippleTimes[i];
+        if (rippleTime > 0.0) {
+          float dist = distance(uv, ripplePos);
+          float rippleRadius = rippleTime * 0.3;
+          float rippleWidth = 0.02;
+          float wave = abs(dist - rippleRadius);
+          float rippleIntensity = smoothstep(rippleWidth, 0.0, wave) *
+                                  (1.0 - smoothstep(0.8, 1.0, rippleTime));
+          alpha += rippleIntensity * 0.6;
+        }
+      }
+
+      gl_FragColor = vec4(finalColor, alpha);
     }
   `;
 
