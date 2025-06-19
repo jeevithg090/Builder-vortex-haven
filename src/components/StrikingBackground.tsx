@@ -13,13 +13,13 @@ const CarObject = ({ x, y, color, rotation, mousePos }: any) => {
     Math.pow(mousePos.x - carX, 2) + Math.pow(mousePos.y - carY, 2),
   );
 
-  // Influence radius
-  const influenceRadius = 150;
+  // Influence radius - made larger for smoother interaction
+  const influenceRadius = 200;
   const influence = Math.max(0, 1 - distance / influenceRadius);
 
-  // Calculate offset based on mouse position (jelly effect)
-  const offsetX = influence > 0 ? (mousePos.x - carX) * influence * 0.3 : 0;
-  const offsetY = influence > 0 ? (mousePos.y - carY) * influence * 0.3 : 0;
+  // Calculate offset based on mouse position (gentler jelly effect)
+  const offsetX = influence > 0 ? (mousePos.x - carX) * influence * 0.15 : 0;
+  const offsetY = influence > 0 ? (mousePos.y - carY) * influence * 0.15 : 0;
 
   return (
     <motion.div
@@ -32,14 +32,14 @@ const CarObject = ({ x, y, color, rotation, mousePos }: any) => {
       animate={{
         x: offsetX,
         y: offsetY,
-        scale: 1 + influence * 0.4,
-        rotate: rotation + influence * 15,
+        scale: 1 + influence * 0.2,
+        rotate: rotation + influence * 8,
       }}
       transition={{
         type: "spring",
-        stiffness: 100,
-        damping: 15,
-        mass: 1,
+        stiffness: 40,
+        damping: 25,
+        mass: 1.5,
       }}
     >
       <div
@@ -120,8 +120,8 @@ const RippleEffect = ({ x, y }: any) => {
         transform: "translate(-50%, -50%)",
       }}
       initial={{ scale: 0, opacity: 1 }}
-      animate={{ scale: 3, opacity: 0 }}
-      transition={{ duration: 1.5, ease: "easeOut" }}
+      animate={{ scale: 4, opacity: 0 }}
+      transition={{ duration: 2.5, ease: "easeOut" }}
     >
       <div className="w-32 h-32 rounded-full border-4 border-gradient-to-r from-purple-400 via-pink-500 to-blue-500 opacity-60">
         {/* Chromatic aberration effect */}
@@ -134,19 +134,34 @@ const RippleEffect = ({ x, y }: any) => {
 };
 
 const StrikingBackground = () => {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [mousePos, setMousePos] = useState({
+    x: typeof window !== "undefined" ? window.innerWidth / 2 : 960,
+    y: typeof window !== "undefined" ? window.innerHeight / 2 : 540,
+  });
   const [ripples, setRipples] = useState<any[]>([]);
+  const [isMouseMoving, setIsMouseMoving] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const rippleId = useRef(0);
+  const mouseTimeoutRef = useRef<NodeJS.Timeout>();
 
-  // Generate car objects with random orientations
-  const carObjects = Array.from({ length: 30 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    color: ["#0000FF", "#000000", "#CCCCCC"][Math.floor(Math.random() * 3)],
-    rotation: Math.random() * 360, // Random initial rotation
-  }));
+  // Generate car objects concentrated in center with gentle spread
+  const carObjects = Array.from({ length: 30 }, (_, i) => {
+    // Create a concentrated distribution around center (50%, 50%)
+    const angle = (i / 30) * Math.PI * 2; // Distribute in a circle
+    const radius = Math.random() * 25 + 5; // Radius between 5% and 30% from center
+    const centerX = 50 + Math.cos(angle) * radius;
+    const centerY = 50 + Math.sin(angle) * radius;
+
+    return {
+      id: i,
+      x: Math.max(10, Math.min(90, centerX)), // Keep within 10%-90% bounds
+      y: Math.max(10, Math.min(90, centerY)), // Keep within 10%-90% bounds
+      color: ["#0000FF", "#000000", "#CCCCCC", "#FF0000", "#00FF00"][
+        Math.floor(Math.random() * 5)
+      ],
+      rotation: Math.random() * 360, // Random initial rotation
+    };
+  });
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!containerRef.current) return;
@@ -156,20 +171,35 @@ const StrikingBackground = () => {
     const y = e.clientY - rect.top;
 
     setMousePos({ x, y });
+    setIsMouseMoving(true);
 
-    // Create ripple effect
-    const newRipple = {
-      id: rippleId.current++,
-      x,
-      y,
-    };
+    // Clear existing timeout
+    if (mouseTimeoutRef.current) {
+      clearTimeout(mouseTimeoutRef.current);
+    }
 
-    setRipples((prev) => [...prev, newRipple]);
+    // Set timeout to stop movement detection
+    mouseTimeoutRef.current = setTimeout(() => {
+      setIsMouseMoving(false);
+    }, 200);
 
-    // Remove ripple after animation
-    setTimeout(() => {
-      setRipples((prev) => prev.filter((ripple) => ripple.id !== newRipple.id));
-    }, 1500);
+    // Create ripple effect less frequently for better performance
+    if (Math.random() > 0.7) {
+      const newRipple = {
+        id: rippleId.current++,
+        x,
+        y,
+      };
+
+      setRipples((prev) => [...prev, newRipple]);
+
+      // Remove ripple after animation
+      setTimeout(() => {
+        setRipples((prev) =>
+          prev.filter((ripple) => ripple.id !== newRipple.id),
+        );
+      }, 2000);
+    }
   };
 
   return (
@@ -209,11 +239,11 @@ const StrikingBackground = () => {
           top: mousePos.y - 12,
         }}
         animate={{
-          scale: [1, 1.5, 1],
+          scale: [1, 1.3, 1],
           rotate: [0, 180, 360],
         }}
         transition={{
-          duration: 2,
+          duration: 4,
           repeat: Infinity,
           ease: "linear",
         }}
@@ -270,7 +300,7 @@ const StrikingBackground = () => {
         transition={{ duration: 1, delay: 2 }}
         className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 text-white/60 text-sm text-center"
       >
-        <p>Move your mouse to create ripple effects</p>
+        <p>Move your mouse slowly to enjoy the car interactions</p>
         <motion.div
           className="mt-2 w-8 h-8 mx-auto border border-white/30 rounded-full"
           animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.8, 0.3] }}
