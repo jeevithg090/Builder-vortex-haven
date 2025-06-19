@@ -34,7 +34,7 @@ const ScrollVideoSection = () => {
   const videoWidth = useTransform(
     scrollYProgress,
     [0, 0.3, 0.7, 1],
-    ["60%", "80%", "95%", "100%"], // Card width grows
+    ["60%", "80%", "100%", "100%"], // Card width grows to full screen
   );
 
   const videoHeight = useTransform(
