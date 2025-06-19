@@ -142,6 +142,13 @@ const TestimonialsSection = () => {
     return () => unsubscribe();
   }, [scrollYProgress]);
 
+  // Ensure we always have a valid activeIndex
+  useEffect(() => {
+    if (activeIndex < 0 || activeIndex >= testimonials.length) {
+      setActiveIndex(0);
+    }
+  }, [activeIndex]);
+
   // Split animation transforms
   const splitProgress = useTransform(scrollYProgress, [0.15, 0.4], [0, 1]);
   const leftSplit = useTransform(splitProgress, [0, 1], [0, -400]);
@@ -162,6 +169,7 @@ const TestimonialsSection = () => {
             className="absolute inset-0 flex items-center justify-center p-8"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
           >
             <div className="max-w-7xl w-full text-center">
               <motion.div
@@ -295,104 +303,106 @@ const TestimonialsSection = () => {
 
             {/* Active Testimonial */}
             <div className="relative h-full flex items-center justify-center p-8 md:p-20">
-              <motion.div
-                key={activeIndex}
-                className="relative z-10 max-w-5xl text-center"
-                initial={{
-                  opacity: 0,
-                  scale: 0.8,
-                  y: 100,
-                }}
-                animate={{
-                  opacity: 1,
-                  scale: 1,
-                  y: 0,
-                }}
-                transition={{
-                  duration: 0.8,
-                  ease: "easeOut",
-                }}
-              >
-                {/* Quote */}
-                <motion.blockquote
-                  className="text-2xl md:text-4xl font-light text-white mb-12 leading-relaxed"
+              {testimonials[activeIndex] && (
+                <motion.div
+                  key={activeIndex}
+                  className="relative z-10 max-w-5xl text-center"
+                  initial={{
+                    opacity: 0,
+                    scale: 0.8,
+                    y: 100,
+                  }}
                   animate={{
-                    textShadow: [
-                      "0 0 20px rgba(255,255,255,0.3)",
-                      "0 0 30px rgba(138,43,226,0.4)",
-                      "0 0 20px rgba(255,105,180,0.3)",
-                    ],
+                    opacity: 1,
+                    scale: 1,
+                    y: 0,
                   }}
                   transition={{
-                    duration: 3,
-                    repeat: Infinity,
+                    duration: 0.8,
+                    ease: "easeOut",
                   }}
                 >
-                  "{testimonials[activeIndex]?.text}"
-                </motion.blockquote>
-
-                {/* Author Info */}
-                <motion.div
-                  className="flex flex-col md:flex-row items-center justify-center gap-6"
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, duration: 0.6 }}
-                >
-                  {/* Avatar */}
-                  <motion.div
-                    className="relative"
+                  {/* Quote */}
+                  <motion.blockquote
+                    className="text-2xl md:text-4xl font-light text-white mb-12 leading-relaxed"
                     animate={{
-                      rotateY: [0, 360],
+                      textShadow: [
+                        "0 0 20px rgba(255,255,255,0.3)",
+                        "0 0 30px rgba(138,43,226,0.4)",
+                        "0 0 20px rgba(255,105,180,0.3)",
+                      ],
                     }}
                     transition={{
-                      duration: 8,
+                      duration: 3,
                       repeat: Infinity,
-                      ease: "linear",
                     }}
                   >
-                    <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-lg font-bold">
-                      <motion.div
-                        className="absolute inset-0 rounded-full border-2 border-white/50"
-                        animate={{
-                          scale: [1, 1.2, 1],
-                          opacity: [0.5, 1, 0.5],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                        }}
-                      />
-                      {testimonials[activeIndex]?.author
-                        .split(" ")
-                        .map((n: string) => n[0])
-                        .join("")}
+                    "{testimonials[activeIndex].text}"
+                  </motion.blockquote>
+
+                  {/* Author Info */}
+                  <motion.div
+                    className="flex flex-col md:flex-row items-center justify-center gap-6"
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4, duration: 0.6 }}
+                  >
+                    {/* Avatar */}
+                    <motion.div
+                      className="relative"
+                      animate={{
+                        rotateY: [0, 360],
+                      }}
+                      transition={{
+                        duration: 8,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
+                    >
+                      <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white text-lg font-bold">
+                        <motion.div
+                          className="absolute inset-0 rounded-full border-2 border-white/50"
+                          animate={{
+                            scale: [1, 1.2, 1],
+                            opacity: [0.5, 1, 0.5],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                          }}
+                        />
+                        {testimonials[activeIndex].author
+                          .split(" ")
+                          .map((n: string) => n[0])
+                          .join("")}
+                      </div>
+                    </motion.div>
+
+                    {/* Author Details */}
+                    <div className="text-center md:text-left">
+                      <h3 className="text-2xl font-bold text-white mb-1">
+                        {testimonials[activeIndex].author}
+                      </h3>
+                      <p className="text-purple-300 text-lg">
+                        {testimonials[activeIndex].role}
+                      </p>
+                      <p className="text-pink-300 font-semibold">
+                        {testimonials[activeIndex].company}
+                      </p>
                     </div>
                   </motion.div>
 
-                  {/* Author Details */}
-                  <div className="text-center md:text-left">
-                    <h3 className="text-2xl font-bold text-white mb-1">
-                      {testimonials[activeIndex]?.author}
-                    </h3>
-                    <p className="text-purple-300 text-lg">
-                      {testimonials[activeIndex]?.role}
-                    </p>
-                    <p className="text-pink-300 font-semibold">
-                      {testimonials[activeIndex]?.company}
-                    </p>
-                  </div>
+                  {/* Project Badge */}
+                  <motion.div
+                    className="mt-8 inline-block px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20"
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    <span className="text-white font-semibold">
+                      {testimonials[activeIndex].project}
+                    </span>
+                  </motion.div>
                 </motion.div>
-
-                {/* Project Badge */}
-                <motion.div
-                  className="mt-8 inline-block px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full border border-white/20"
-                  whileHover={{ scale: 1.05 }}
-                >
-                  <span className="text-white font-semibold">
-                    {testimonials[activeIndex]?.project}
-                  </span>
-                </motion.div>
-              </motion.div>
+              )}
 
               {/* Progress Indicator */}
               <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2">
