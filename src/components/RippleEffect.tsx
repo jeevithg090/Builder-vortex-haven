@@ -60,8 +60,7 @@ const RippleEffect = () => {
 
     void main() {
       vec2 uv = v_texCoord;
-      vec3 baseColor = vec3(0.878, 0.898, 0.925); // #E0E5EC
-      vec3 finalColor = baseColor;
+      vec3 finalColor = vec3(0.0); // Start with transparent/black
 
       for (int i = 0; i < 10; i++) {
         if (i >= u_rippleCount) break;
