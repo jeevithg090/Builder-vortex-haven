@@ -202,6 +202,15 @@ const StrikingBackground = () => {
     }
   };
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (mouseTimeoutRef.current) {
+        clearTimeout(mouseTimeoutRef.current);
+      }
+    };
+  }, []);
+
   return (
     <div
       ref={containerRef}
