@@ -8,6 +8,7 @@ import RippleEffect from "@/components/RippleEffect";
 import ScrollVideoSection from "@/components/ScrollVideoSection";
 import BrandKits from "@/components/BrandKits";
 import PortfolioStats from "@/components/PortfolioStats";
+import ParallaxVision from "@/components/ParallaxVision";
 
 const Index = () => {
   const [loading, setLoading] = useState(true);
