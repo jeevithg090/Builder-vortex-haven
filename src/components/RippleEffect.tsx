@@ -245,6 +245,10 @@ const RippleEffect = () => {
     canvas.height = window.innerHeight;
     gl.viewport(0, 0, canvas.width, canvas.height);
 
+    // Enable blending for transparency
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
     // Clear canvas with transparent background
     gl.clearColor(0.0, 0.0, 0.0, 0.0); // Transparent
     gl.clear(gl.COLOR_BUFFER_BIT);
