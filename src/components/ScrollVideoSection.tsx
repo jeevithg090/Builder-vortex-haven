@@ -269,44 +269,10 @@ const ScrollVideoSection = () => {
               </h2>
             </motion.div>
 
-            {/* Size Progress indicator */}
+            {/* Progress indicator */}
             <div className="absolute bottom-4 left-4 text-white/60 text-sm font-mono">
-              Size: {Math.round(cardSizePercent * 100)}%
+              {Math.round(scrollProgress * 100)}%
             </div>
-
-            {/* Scroll lock indicator */}
-            {isScrollLocked && (
-              <motion.div
-                className="absolute bottom-4 right-4 bg-black/70 backdrop-blur-sm rounded-lg px-4 py-2"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-              >
-                <div className="text-white text-sm font-medium text-center">
-                  <div className="text-yellow-400 font-bold">
-                    {Math.round(cardSizePercent * 100)}/90%
-                  </div>
-                  <div className="text-xs opacity-80">
-                    Card must reach 90% to continue
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {/* Unlock message */}
-            {cardSizePercent >= scrollLockThreshold && (
-              <motion.div
-                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-500/90 backdrop-blur-sm rounded-lg px-6 py-3 z-20"
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.5 }}
-                transition={{ duration: 0.5 }}
-              >
-                <div className="text-white text-center font-bold">
-                  🎉 Unlocked! You can now continue scrolling
-                </div>
-              </motion.div>
-            )}
           </motion.div>
 
           {/* ABOUT US Button */}
