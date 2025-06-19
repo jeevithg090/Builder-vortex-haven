@@ -27,12 +27,11 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
         // Progress complete, start breaking animation
         setTimeout(() => setAnimationPhase(2), 300); // Break and rotate
         setTimeout(() => setAnimationPhase(3), 1000); // L comes outward
-        setTimeout(() => setAnimationPhase(4), 1800); // Transform to smaller L
-        setTimeout(() => setAnimationPhase(5), 2500); // Final horizontal bar
+        setTimeout(() => setAnimationPhase(4), 2000); // Final horizontal bar
         setTimeout(() => {
-          setAnimationPhase(6);
+          setAnimationPhase(5);
           setTimeout(onLoadComplete, 500);
-        }, 3200);
+        }, 2600);
       }
     };
 
@@ -118,19 +117,19 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
           </>
         )}
 
-        {/* Phase 3: L Shape comes outward and grows */}
+        {/* Phase 3: L Shape comes outward and stays */}
         {animationPhase === 3 && (
           <>
             <motion.div
               className="relative"
               initial={{ scale: 0.8 }}
-              animate={{ scale: 1.2 }}
+              animate={{ scale: 1.1 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
             >
               {/* Vertical part of L */}
               <motion.div
                 className="bg-white absolute"
-                style={{ width: "32px", height: "160px", x: 0, y: -160 }}
+                style={{ width: "32px", height: "120px", x: 0, y: -120 }}
                 initial={{ opacity: 0.8 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4 }}
@@ -138,7 +137,7 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
               {/* Horizontal part of L */}
               <motion.div
                 className="bg-white absolute"
-                style={{ width: "128px", height: "32px", x: 0, y: 0 }}
+                style={{ width: "96px", height: "32px", x: 0, y: 0 }}
                 initial={{ opacity: 0.8 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.4 }}
@@ -151,39 +150,12 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
           </>
         )}
 
-        {/* Phase 4: L Shape scales down - Reference Image 2 */}
+        {/* Phase 4: Transform to horizontal bar - Reference Image 3 */}
         {animationPhase === 4 && (
           <>
             <motion.div
-              className="relative"
-              initial={{ scale: 1.2 }}
-              animate={{ scale: 0.8 }}
-              transition={{ duration: 0.7, ease: "easeInOut" }}
-            >
-              {/* Vertical part of smaller L */}
-              <motion.div
-                className="bg-white absolute"
-                style={{ width: "24px", height: "100px", x: 0, y: -100 }}
-              />
-              {/* Horizontal part of smaller L */}
-              <motion.div
-                className="bg-white absolute"
-                style={{ width: "80px", height: "24px", x: 0, y: 0 }}
-              />
-            </motion.div>
-            {/* "100" text fixed bottom left */}
-            <div className="fixed bottom-8 left-8 text-white text-8xl font-bold">
-              100
-            </div>
-          </>
-        )}
-
-        {/* Phase 5: Transform to horizontal bar - Reference Image 3 */}
-        {animationPhase === 5 && (
-          <>
-            <motion.div
               className="bg-white"
-              initial={{ width: "80px", height: "24px" }}
+              initial={{ width: "96px", height: "32px" }}
               animate={{ width: "200px", height: "20px" }}
               transition={{ duration: 0.7, ease: "easeOut" }}
             />
@@ -194,8 +166,8 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
           </>
         )}
 
-        {/* Phase 6: Diagonal wipe and content reveal */}
-        {animationPhase === 6 && (
+        {/* Phase 5: Diagonal wipe and content reveal */}
+        {animationPhase === 5 && (
           <motion.div
             className="absolute inset-0 bg-white"
             initial={{
