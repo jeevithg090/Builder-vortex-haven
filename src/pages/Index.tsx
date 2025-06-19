@@ -7,6 +7,7 @@ import PricingSection from "@/components/PricingSection";
 import RippleEffect from "@/components/RippleEffect";
 import ScrollVideoSection from "@/components/ScrollVideoSection";
 import BrandKits from "@/components/BrandKits";
+import PortfolioStats from "@/components/PortfolioStats";
 
 const Index = () => {
   const [loading, setLoading] = useState(true);
