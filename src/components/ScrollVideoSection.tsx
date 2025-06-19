@@ -44,7 +44,7 @@ const ScrollVideoSection = () => {
     offset: ["start center", "end center"],
   });
 
-  // Enhanced scroll tracking with multiple triggers
+  // Enhanced scroll tracking with multiple triggers and auto-dismiss
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     setScrollProgress(latest);
 
@@ -55,15 +55,27 @@ const ScrollVideoSection = () => {
     if (latest > 0.4 && latest < 0.5 && !showTestimonialPopup) {
       setTimeout(() => setShowTestimonialPopup(true), 500);
     }
+    // Auto-dismiss testimonial popup when scrolling past its zone
+    if ((latest <= 0.4 || latest >= 0.6) && showTestimonialPopup) {
+      setShowTestimonialPopup(false);
+    }
 
     // Trigger stats popup
     if (latest > 0.6 && latest < 0.7 && !showStatsPopup) {
       setTimeout(() => setShowStatsPopup(true), 800);
     }
+    // Auto-dismiss stats popup when scrolling past its zone
+    if ((latest <= 0.6 || latest >= 0.8) && showStatsPopup) {
+      setShowStatsPopup(false);
+    }
 
     // Show action panel
     if (latest > 0.8) {
       setShowActionPanel(true);
+    }
+    // Auto-dismiss action panel when scrolling back up
+    if (latest <= 0.7 && showActionPanel) {
+      setShowActionPanel(false);
     }
   });
 
@@ -505,19 +517,6 @@ const ScrollVideoSection = () => {
               </div>
             </motion.div>
           </motion.div>
-        </div>
-
-        {/* Scroll Progress Indicator */}
-        <div className="fixed left-4 top-1/2 transform -translate-y-1/2 z-30">
-          <div className="w-1 h-32 bg-gray-300 rounded-full overflow-hidden">
-            <motion.div
-              className="w-full bg-gradient-to-t from-purple-500 to-pink-500 rounded-full origin-bottom"
-              style={{ height: `${scrollProgress * 100}%` }}
-            />
-          </div>
-          <div className="text-xs text-gray-500 mt-2 text-center">
-            {Math.round(scrollProgress * 100)}%
-          </div>
         </div>
 
         {/* Floating Scroll Down Indicator */}
