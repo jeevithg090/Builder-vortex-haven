@@ -268,11 +268,6 @@ const ScrollVideoSection = () => {
                 REEL
               </h2>
             </motion.div>
-
-            {/* Progress indicator */}
-            <div className="absolute bottom-4 left-4 text-white/60 text-sm font-mono">
-              {Math.round(scrollProgress * 100)}%
-            </div>
           </motion.div>
 
           {/* ABOUT US Button */}
