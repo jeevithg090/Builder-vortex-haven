@@ -165,9 +165,6 @@ const Index = () => {
               <BrandKits />
             </section>
 
-            {/* Portfolio Stats Section */}
-            <PortfolioStats />
-
             {/* Parallax Vision Section */}
             <ParallaxVision />
 
