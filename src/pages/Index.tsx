@@ -10,6 +10,9 @@ import BrandKitsWithStats from "@/components/BrandKitsWithStats";
 import ParallaxVision from "@/components/ParallaxVision";
 import ShowcaseWork from "@/components/ShowcaseWork";
 import StrikingBackground from "@/components/StrikingBackground";
+import TeamAboutSection from "@/components/TeamAboutSection";
+import ContactSection from "@/components/ContactSection";
+import EnhancedFooter from "@/components/EnhancedFooter";
 
 const Index = () => {
   const [loading, setLoading] = useState(true);
