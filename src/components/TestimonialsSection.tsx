@@ -1,11 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import {
-  motion,
-  useInView,
-  useScroll,
-  useTransform,
-  AnimatePresence,
-} from "framer-motion";
+import { motion, useInView, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { Play, Star, Award, Zap, Users } from "lucide-react";
 
 const testimonials = [
@@ -17,7 +11,7 @@ const testimonials = [
     role: "CEO",
     videoThumbnail: true,
     rating: 5,
-    project: "Complete Brand Overhaul",
+    project: "Complete Brand Overhaul"
   },
   {
     id: 2,
@@ -27,7 +21,7 @@ const testimonials = [
     role: "Founder",
     videoThumbnail: false,
     rating: 5,
-    project: "Digital Transformation",
+    project: "Digital Transformation"
   },
   {
     id: 3,
@@ -37,7 +31,7 @@ const testimonials = [
     role: "Marketing Director",
     videoThumbnail: true,
     rating: 5,
-    project: "Brand Strategy & Campaign",
+    project: "Brand Strategy & Campaign"
   },
   {
     id: 4,
@@ -47,7 +41,7 @@ const testimonials = [
     role: "Creative Director",
     videoThumbnail: false,
     rating: 5,
-    project: "Architecture Firm Rebrand",
+    project: "Architecture Firm Rebrand"
   },
   {
     id: 5,
@@ -57,7 +51,7 @@ const testimonials = [
     role: "Brand Manager",
     videoThumbnail: true,
     rating: 5,
-    project: "Product Launch Campaign",
+    project: "Product Launch Campaign"
   },
   {
     id: 6,
@@ -67,7 +61,7 @@ const testimonials = [
     role: "CEO",
     videoThumbnail: false,
     rating: 5,
-    project: "Wellness Brand Refresh",
+    project: "Wellness Brand Refresh"
   },
 ];
 
@@ -112,9 +106,7 @@ const TestimonialsSection = () => {
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: false, margin: "-100px" });
   const [activeIndex, setActiveIndex] = useState(0);
-  const [currentPhase, setCurrentPhase] = useState<
-    "intro" | "split" | "fullscreen"
-  >("intro");
+  const [currentPhase, setCurrentPhase] = useState<'intro' | 'split' | 'fullscreen'>('intro');
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -127,15 +119,13 @@ const TestimonialsSection = () => {
   useEffect(() => {
     const unsubscribe = scrollYProgress.onChange((latest) => {
       if (latest < 0.15) {
-        setCurrentPhase("intro");
+        setCurrentPhase('intro');
       } else if (latest < 0.4) {
-        setCurrentPhase("split");
+        setCurrentPhase('split');
       } else {
-        setCurrentPhase("fullscreen");
+        setCurrentPhase('fullscreen');
         // Update testimonial index based on scroll
-        const testimonialIndex = Math.floor(
-          (latest - 0.4) / (0.6 / testimonials.length),
-        );
+        const testimonialIndex = Math.floor((latest - 0.4) / (0.6 / testimonials.length));
         setActiveIndex(Math.min(testimonialIndex, testimonials.length - 1));
       }
     });
@@ -155,65 +145,142 @@ const TestimonialsSection = () => {
   return (
     <section
       id="testimonials"
-      className="relative h-[500vh] bg-black overflow-hidden"
+      className="relative h-[400vh] bg-gradient-to-br from-gray-900 via-purple-900 to-black overflow-hidden"
       ref={containerRef}
     >
-      {/* Insane Particle System */}
-      <div className="fixed inset-0 pointer-events-none">
-        {Array.from({ length: 50 }).map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-2 h-2 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              rotate: particleRotation,
-              scale: particleScale,
-            }}
-            animate={{
-              x: [0, Math.random() * 200 - 100],
-              y: [0, Math.random() * 200 - 100],
-              opacity: [0, 1, 0],
-            }}
-            transition={{
-              duration: 3 + Math.random() * 2,
-              repeat: Infinity,
-              delay: Math.random() * 2,
-            }}
-          />
-        ))}
-      </div>
+      {/* Particle System (only in fullscreen phase) */}
+      {currentPhase === 'fullscreen' && (
+        <div className="fixed inset-0 pointer-events-none">
+          {Array.from({ length: 20 }).map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                rotate: particleRotation,
+                scale: particleScale,
+              }}
+              animate={{
+                x: [0, Math.random() * 100 - 50],
+                y: [0, Math.random() * 100 - 50],
+                opacity: [0, 0.8, 0],
+              }}
+              transition={{
+                duration: 2 + Math.random(),
+                repeat: Infinity,
+                delay: Math.random(),
+              }}
+            />
+          ))}
+        </div>
+      )}
 
-      {/* Sticky Container for Split Animation */}
+      {/* Sticky Container */}
       <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
-        {/* Initial Split Cards */}
-        <AnimatePresence>
-          {splitProgress.get() < 1 && scrollYProgress.get() > 0.1 && (
-            <>
-              {/* Left Split */}
-              <motion.div
-                className="absolute left-1/2 w-1/2 h-full bg-gradient-to-br from-purple-900 to-purple-800 flex items-center justify-center"
-                style={{
-                  x: leftSplit,
-                  scale: splitScale,
-                  rotate: splitRotate,
-                  transformOrigin: "right center",
-                }}
+
+        {/* Phase 1: Intro with traditional cards */}
+        {currentPhase === 'intro' && (
+          <motion.div
+            className="absolute inset-0 flex items-center justify-center p-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="max-w-6xl text-center">
+              <motion.h1
+                className="text-5xl md:text-7xl font-bold text-white mb-6"
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8 }}
               >
-                <div className="text-center text-white p-12">
-                  <motion.div
-                    className="text-8xl font-black mb-6 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent"
-                    animate={{
-                      scale: [1, 1.1, 1],
-                      rotateY: [0, 10, 0],
-                    }}
-                    transition={{
-                      duration: 2,
-                      repeat: Infinity,
-                    }}
-                  >
-                    CLIENT
-                  </motion.div>
+                Client Success Stories
+              </motion.h1>
+              <motion.p
+                className="text-xl text-gray-300 mb-12"
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+              >
+                Scroll down to experience testimonials like never before
+              </motion.p>
+
+              {/* Show all testimonials in a grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {testimonials.map((testimonial, index) => (
+                  <TestimonialCard
+                    key={testimonial.id}
+                    testimonial={testimonial}
+                    index={index}
+                    isInView={true}
+                    isActive={index === 0}
+                  />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Phase 2: Split Animation */}
+        {currentPhase === 'split' && (
+          <AnimatePresence>
+            {/* Left Split */}
+            <motion.div
+              className="absolute left-1/2 w-1/2 h-full bg-gradient-to-br from-purple-900 to-purple-700 flex items-center justify-center"
+              style={{
+                x: leftSplit,
+                scale: splitScale,
+                transformOrigin: "right center",
+              }}
+            >
+              <div className="text-center text-white p-12">
+                <motion.div
+                  className="text-6xl md:text-8xl font-black mb-6 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent"
+                  animate={{
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                  }}
+                >
+                  SUCCESS
+                </motion.div>
+                <div className="text-xl opacity-80">REVEALED</div>
+              </div>
+            </motion.div>
+
+            {/* Right Split */}
+            <motion.div
+              className="absolute right-1/2 w-1/2 h-full bg-gradient-to-bl from-pink-900 to-pink-700 flex items-center justify-center"
+              style={{
+                x: rightSplit,
+                scale: splitScale,
+                transformOrigin: "left center",
+              }}
+            >
+              <div className="text-center text-white p-12">
+                <motion.div
+                  className="text-6xl md:text-8xl font-black mb-6 bg-gradient-to-r from-white to-pink-200 bg-clip-text text-transparent"
+                  animate={{
+                    scale: [1, 1.1, 1],
+                  }}
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    delay: 0.5,
+                  }}
+                >
+                  STORIES
+                </motion.div>
+                <div className="text-xl opacity-80">IMMERSIVE</div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        )}
+
+        {/* Phase 3: Fullscreen Testimonial Experience */}
+        {currentPhase === 'fullscreen' && (
                   <motion.div
                     className="text-2xl opacity-80"
                     animate={{
@@ -314,6 +381,7 @@ const TestimonialsSection = () => {
             >
               {/* Active Testimonial with Insane Transitions */}
               <div className="relative h-full flex items-center justify-center p-20">
+
                 {/* Background Morphing Shapes */}
                 <motion.div
                   className="absolute inset-0 opacity-20"
@@ -410,10 +478,7 @@ const TestimonialsSection = () => {
                             repeat: Infinity,
                           }}
                         />
-                        {testimonials[activeIndex]?.author
-                          .split(" ")
-                          .map((n: string) => n[0])
-                          .join("")}
+                        {testimonials[activeIndex]?.author.split(' ').map((n: string) => n[0]).join('')}
                       </div>
                     </motion.div>
 
@@ -425,8 +490,7 @@ const TestimonialsSection = () => {
                           backgroundPosition: ["0%", "100%"],
                         }}
                         style={{
-                          background:
-                            "linear-gradient(90deg, #fff, #a855f7, #ec4899, #fff)",
+                          background: "linear-gradient(90deg, #fff, #a855f7, #ec4899, #fff)",
                           backgroundSize: "200% 100%",
                           WebkitBackgroundClip: "text",
                           WebkitTextFillColor: "transparent",
@@ -440,12 +504,8 @@ const TestimonialsSection = () => {
                       >
                         {testimonials[activeIndex]?.author}
                       </motion.h3>
-                      <p className="text-purple-300 text-xl">
-                        {testimonials[activeIndex]?.role}
-                      </p>
-                      <p className="text-pink-300 text-lg font-semibold">
-                        {testimonials[activeIndex]?.company}
-                      </p>
+                      <p className="text-purple-300 text-xl">{testimonials[activeIndex]?.role}</p>
+                      <p className="text-pink-300 text-lg font-semibold">{testimonials[activeIndex]?.company}</p>
                     </div>
                   </motion.div>
 
@@ -479,22 +539,18 @@ const TestimonialsSection = () => {
                         key={index}
                         className={`w-4 h-4 rounded-full border-2 ${
                           index === activeIndex
-                            ? "bg-white border-white"
-                            : "bg-transparent border-white/50"
+                            ? 'bg-white border-white'
+                            : 'bg-transparent border-white/50'
                         }`}
-                        animate={
-                          index === activeIndex
-                            ? {
-                                scale: [1, 1.5, 1],
-                                rotate: [0, 360],
-                                boxShadow: [
-                                  "0 0 0px rgba(255,255,255,0.5)",
-                                  "0 0 20px rgba(255,255,255,0.8)",
-                                  "0 0 0px rgba(255,255,255,0.5)",
-                                ],
-                              }
-                            : {}
-                        }
+                        animate={index === activeIndex ? {
+                          scale: [1, 1.5, 1],
+                          rotate: [0, 360],
+                          boxShadow: [
+                            "0 0 0px rgba(255,255,255,0.5)",
+                            "0 0 20px rgba(255,255,255,0.8)",
+                            "0 0 0px rgba(255,255,255,0.5)",
+                          ],
+                        } : {}}
                         transition={{
                           duration: 1,
                           repeat: index === activeIndex ? Infinity : 0,
@@ -541,14 +597,12 @@ const TestimonialCard = ({ testimonial, index, isInView, isActive }: any) => {
   return (
     <motion.div
       className={`bg-white/10 backdrop-blur-sm rounded-2xl p-6 border transition-all duration-500 hover:bg-white/15 group ${
-        isActive
-          ? "border-purple-400 shadow-lg shadow-purple-400/25"
-          : "border-white/20"
+        isActive ? 'border-purple-400 shadow-lg shadow-purple-400/25' : 'border-white/20'
       }`}
       initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
       animate={isInView ? { opacity: 1, x: 0 } : {}}
       transition={{
-        delay: 0.8 + index * 0.15,
+        delay: 0.8 + (index * 0.15),
         duration: 0.8,
         ease: "easeOut",
       }}
@@ -559,9 +613,7 @@ const TestimonialCard = ({ testimonial, index, isInView, isActive }: any) => {
         {[...Array(testimonial.rating)].map((_, i) => (
           <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
         ))}
-        <span className="ml-2 text-sm text-gray-300">
-          {testimonial.project}
-        </span>
+        <span className="ml-2 text-sm text-gray-300">{testimonial.project}</span>
       </div>
 
       {/* Quote */}
@@ -586,20 +638,13 @@ const TestimonialCard = ({ testimonial, index, isInView, isActive }: any) => {
       {/* Author Info */}
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-white font-semibold text-sm">
-            {testimonial.author}
-          </div>
+          <div className="text-white font-semibold text-sm">{testimonial.author}</div>
           <div className="text-gray-400 text-xs">{testimonial.role}</div>
-          <div className="text-purple-400 text-xs font-medium">
-            {testimonial.company}
-          </div>
+          <div className="text-purple-400 text-xs font-medium">{testimonial.company}</div>
         </div>
         <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
           <span className="text-white font-bold text-sm">
-            {testimonial.author
-              .split(" ")
-              .map((n: string) => n[0])
-              .join("")}
+            {testimonial.author.split(' ').map((n: string) => n[0]).join('')}
           </span>
         </div>
       </div>
