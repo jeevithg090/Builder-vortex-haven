@@ -2,6 +2,8 @@
 
 A fully responsive, feature-rich web application built with React, TypeScript, and modern web technologies. This project showcases advanced animations, interactive elements, and a sophisticated design system.
 
+Website Link: https://builder-vortex-haven.vercel.app/
+
 ## 🚀 Features Implemented
 
 ### Mandatory Features ✅
@@ -232,6 +234,8 @@ This project was developed with assistance from the following AI tools:
 - **Claude (Anthropic)** - Primary development assistant for code generation, debugging, and optimization
 - **GitHub Copilot** - Code completion and suggestions
 - **Claude Artifacts** - Component design and implementation
+- **Builder.io- For Code Generation
+- **Gemini AI- Classification of UI Components
 
 ## 📊 Evaluation Criteria Met
 
