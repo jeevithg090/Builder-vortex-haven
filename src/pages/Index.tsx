@@ -183,74 +183,23 @@ const Index = () => {
               <ShowcaseWork />
             </section>
 
+            {/* Team and About Section */}
+            <section id="team-about">
+              <TeamAboutSection />
+            </section>
+
             {/* Interactive Background Section */}
             <section id="interactive">
               <StrikingBackground />
             </section>
 
-            {/* Footer */}
-            <footer className="bg-gray-900 text-white py-12">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="text-center">
-                  <motion.h3
-                    className="text-2xl font-bold mb-4"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    viewport={{ once: true }}
-                  >
-                    Happy Sellers
-                  </motion.h3>
+            {/* Contact Section */}
+            <section id="contact">
+              <ContactSection />
+            </section>
 
-                  <motion.p
-                    className="text-gray-400 mb-8"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                    viewport={{ once: true }}
-                  >
-                    Empowering Amazon sellers with intelligent automation
-                  </motion.p>
-
-                  <motion.div
-                    className="flex justify-center space-x-8 mb-8"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                    viewport={{ once: true }}
-                  >
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors"
-                    >
-                      Privacy Policy
-                    </a>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors"
-                    >
-                      Terms of Service
-                    </a>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-white transition-colors"
-                    >
-                      Contact Us
-                    </a>
-                  </motion.div>
-
-                  <motion.p
-                    className="text-gray-500 text-sm"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ duration: 0.6, delay: 0.6 }}
-                    viewport={{ once: true }}
-                  >
-                    © 2024 Happy Sellers. All rights reserved.
-                  </motion.p>
-                </div>
-              </div>
-            </footer>
+            {/* Enhanced Footer */}
+            <EnhancedFooter />
           </motion.div>
         </>
       )}
