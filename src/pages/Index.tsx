@@ -104,12 +104,12 @@ const Index = () => {
                     transition={{ duration: 1, delay: 1 }}
                   >
                     <motion.a
-                      href="#pricing"
+                      href="#contact"
                       className="bg-brand-purple hover:bg-brand-purple/90 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 inline-block"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      Get Started Today
+                      Start Your Project
                     </motion.a>
 
                     <motion.a
@@ -118,7 +118,7 @@ const Index = () => {
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >
-                      See Success Stories
+                      View Our Work
                     </motion.a>
                   </motion.div>
                 </motion.div>
