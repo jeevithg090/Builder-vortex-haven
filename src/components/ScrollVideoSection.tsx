@@ -61,19 +61,32 @@ const ScrollVideoSection = () => {
       >
         {/* Background Image Container */}
         <div className="sticky top-0 h-screen w-full">
-          {/* Subtle background image */}
+          {/* Background video that transforms during scroll */}
           <motion.div
-            className="absolute inset-0 opacity-30"
+            className="absolute inset-0"
             style={{
               opacity: backgroundOpacity,
               scale: contentScale,
             }}
           >
-            <img
-              src="https://cdn.builder.io/api/v1/assets/96fa70b7eb664ab6acbd62e2c416296c/screenshot-2025-06-19-at-3.50.35-pm-53f2d2?format=webp&width=800"
-              alt="3D Scene"
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
               className="w-full h-full object-cover rounded-lg"
-            />
+            >
+              <source
+                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                type="video/mp4"
+              />
+              <source
+                src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"
+                type="video/mp4"
+              />
+              {/* Fallback to a simple animation if video fails */}
+              <div className="w-full h-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 animate-pulse" />
+            </video>
           </motion.div>
 
           {/* Wavy Purple Overlays */}
@@ -210,19 +223,22 @@ const ScrollVideoSection = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
                 {[
                   {
-                    image:
-                      "https://cdn.builder.io/api/v1/assets/96fa70b7eb664ab6acbd62e2c416296c/screenshot-2025-06-19-at-3.51.29-pm-74bd82?format=webp&width=800",
+                    video:
+                      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
                     background: "bg-red-500",
+                    title: "Project One",
                   },
                   {
-                    image:
-                      "https://cdn.builder.io/api/v1/assets/96fa70b7eb664ab6acbd62e2c416296c/screenshot-2025-06-19-at-3.51.36-pm-7fac66?format=webp&width=800",
+                    video:
+                      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
                     background: "bg-purple-500",
+                    title: "Project Two",
                   },
                   {
-                    image:
-                      "https://cdn.builder.io/api/v1/assets/96fa70b7eb664ab6acbd62e2c416296c/screenshot-2025-06-19-at-3.51.23-pm-8d3bee?format=webp&width=800",
+                    video:
+                      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
                     background: "bg-blue-500",
+                    title: "Project Three",
                   },
                 ].map((item, index) => (
                   <motion.div
@@ -234,13 +250,25 @@ const ScrollVideoSection = () => {
                     viewport={{ once: true }}
                   >
                     <div
-                      className={`aspect-video ${item.background} rounded-2xl overflow-hidden mb-4 group-hover:scale-105 transition-transform duration-300`}
+                      className={`aspect-video ${item.background} rounded-2xl overflow-hidden mb-4 group-hover:scale-105 transition-transform duration-300 relative`}
                     >
-                      <img
-                        src={item.image}
-                        alt={`Project ${index + 1}`}
-                        className="w-full h-full object-cover mix-blend-overlay"
-                      />
+                      <video
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="w-full h-full object-cover mix-blend-overlay group-hover:mix-blend-normal transition-all duration-300"
+                      >
+                        <source src={item.video} type="video/mp4" />
+                        <div className="w-full h-full bg-gradient-to-br from-gray-400 to-gray-600" />
+                      </video>
+
+                      {/* Overlay icons */}
+                      <div className="absolute top-4 right-4 flex gap-2">
+                        <div className="w-8 h-8 bg-white/80 rounded-full flex items-center justify-center">
+                          <Play className="w-4 h-4 text-gray-800" />
+                        </div>
+                      </div>
                     </div>
                     <div className="flex justify-center">
                       <button className="text-gray-400 hover:text-gray-600 text-2xl transition-colors">
@@ -311,7 +339,15 @@ const ScrollVideoSection = () => {
                 controls
               >
                 <source
-                  src="https://www.w3schools.com/html/mov_bbb.mp4"
+                  src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                  type="video/mp4"
+                />
+                <source
+                  src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_2mb.mp4"
+                  type="video/mp4"
+                />
+                <source
+                  src="https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4"
                   type="video/mp4"
                 />
                 Your browser does not support the video tag.
