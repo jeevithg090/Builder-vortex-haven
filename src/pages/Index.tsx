@@ -86,7 +86,7 @@ const Index = () => {
                   </h1>
 
                   <motion.p
-                    className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto"
+                    className="text-lg sm:text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto px-4"
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.6 }}
