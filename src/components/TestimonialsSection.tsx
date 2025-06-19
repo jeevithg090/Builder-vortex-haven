@@ -214,7 +214,7 @@ const TestimonialsSection = () => {
       <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
         {/* Initial Split Cards */}
         <AnimatePresence>
-          {splitProgress.get() < 1 && (
+          {splitProgress.get() < 1 && scrollYProgress.get() > 0.1 && (
             <>
               {/* Left Split */}
               <motion.div
