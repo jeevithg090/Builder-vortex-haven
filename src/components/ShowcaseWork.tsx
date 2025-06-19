@@ -188,12 +188,19 @@ const ShowcaseWork = () => {
                     className="relative"
                   >
                     <div className="aspect-square bg-white/10 rounded-2xl overflow-hidden shadow-2xl">
-                      {/* Placeholder for actual images */}
-                      <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center">
-                        <div className="w-3/4 h-3/4 bg-white/10 rounded-lg flex items-center justify-center">
-                          <span className="text-white/50 text-2xl font-bold">
+                      <img
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-black/30 flex items-end p-6">
+                        <div className="text-white">
+                          <div className="text-sm font-semibold mb-2 opacity-80">
                             PROJECT {project.number}
-                          </span>
+                          </div>
+                          <div className="text-xs opacity-60">
+                            {project.tags.join(" • ")}
+                          </div>
                         </div>
                       </div>
                     </div>
