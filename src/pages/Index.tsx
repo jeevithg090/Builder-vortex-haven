@@ -165,14 +165,9 @@ const Index = () => {
               <ScrollVideoSection />
             </section>
 
-            {/* Brand Kits Section */}
-            <section id="brandkits" className="py-20">
-              <BrandKits />
-            </section>
-
-            {/* Portfolio Stats Section */}
-            <section id="stats">
-              <PortfolioStats />
+            {/* Brand Kits with Stats Section */}
+            <section id="brandkits-stats">
+              <BrandKitsWithStats />
             </section>
 
             {/* Parallax Vision Section */}
