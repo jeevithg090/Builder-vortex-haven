@@ -25,13 +25,13 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
         requestAnimationFrame(updateProgress);
       } else {
         // Progress complete, start breaking animation
-        setTimeout(() => setAnimationPhase(2), 300); // Break and rotate
-        setTimeout(() => setAnimationPhase(3), 1000); // L comes outward
-        setTimeout(() => setAnimationPhase(4), 2000); // Final horizontal bar
+        setTimeout(() => setAnimationPhase(2), 200); // Break and rotate
+        setTimeout(() => setAnimationPhase(3), 600); // L comes outward
+        setTimeout(() => setAnimationPhase(4), 1000); // Final horizontal bar
         setTimeout(() => {
           setAnimationPhase(5);
-          setTimeout(onLoadComplete, 500);
-        }, 2600);
+          setTimeout(onLoadComplete, 300);
+        }, 1400);
       }
     };
 
