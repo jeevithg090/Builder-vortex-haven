@@ -6,6 +6,11 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import PricingSection from "@/components/PricingSection";
 import RippleEffect from "@/components/RippleEffect";
 import ScrollVideoSection from "@/components/ScrollVideoSection";
+import BrandKits from "@/components/BrandKits";
+import PortfolioStats from "@/components/PortfolioStats";
+import ParallaxVision from "@/components/ParallaxVision";
+import ShowcaseWork from "@/components/ShowcaseWork";
+import StrikingBackground from "@/components/StrikingBackground";
 
 const Index = () => {
   const [loading, setLoading] = useState(true);
@@ -154,6 +159,23 @@ const Index = () => {
 
             {/* Scroll Video Section */}
             <ScrollVideoSection />
+
+            {/* Brand Kits Section */}
+            <section className="py-20">
+              <BrandKits />
+            </section>
+
+            {/* Portfolio Stats Section */}
+            <PortfolioStats />
+
+            {/* Parallax Vision Section */}
+            <ParallaxVision />
+
+            {/* Showcase Work Section */}
+            <ShowcaseWork />
+
+            {/* Striking Interactive Background Section */}
+            <StrikingBackground />
 
             {/* Footer */}
             <footer className="bg-gray-900 text-white py-12">
