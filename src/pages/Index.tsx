@@ -13,6 +13,7 @@ import StrikingBackground from "@/components/StrikingBackground";
 import TeamAboutSection from "@/components/TeamAboutSection";
 import ContactSection from "@/components/ContactSection";
 import EnhancedFooter from "@/components/EnhancedFooter";
+import ClientCarousel from "@/components/ClientCarousel";
 
 const Index = () => {
   const [loading, setLoading] = useState(true);
@@ -156,6 +157,11 @@ const Index = () => {
             {/* Testimonials Section */}
             <section id="testimonials">
               <TestimonialsSection />
+            </section>
+
+            {/* Client Carousel Section */}
+            <section id="client-stories">
+              <ClientCarousel />
             </section>
 
             {/* Pricing Section */}
