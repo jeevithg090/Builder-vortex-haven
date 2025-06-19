@@ -10,6 +10,7 @@ import BrandKits from "@/components/BrandKits";
 import PortfolioStats from "@/components/PortfolioStats";
 import ParallaxVision from "@/components/ParallaxVision";
 import ShowcaseWork from "@/components/ShowcaseWork";
+import StrikingBackground from "@/components/StrikingBackground";
 
 const Index = () => {
   const [loading, setLoading] = useState(true);
