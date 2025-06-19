@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { Play } from "lucide-react";
 
 const testimonials = [
@@ -63,6 +63,12 @@ const TypewriterText = ({
 const TestimonialsSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
 
   return (
     <section
@@ -136,7 +142,10 @@ const TestimonialsSection = () => {
         </motion.div>
 
         {/* Testimonial Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          style={{ y }}
+        >
           {testimonials.map((testimonial, index) => (
             <motion.div
               key={testimonial.id}
@@ -173,7 +182,7 @@ const TestimonialsSection = () => {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
 
         {/* Additional testimonials hint */}
         <motion.div
