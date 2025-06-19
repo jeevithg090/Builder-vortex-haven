@@ -9,7 +9,7 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
   useEffect(() => {
     // Phase 1: Linear progress bar grows from 0 to 100
     const startTime = Date.now();
-    const duration = 2500; // 2.5 seconds total
+    const duration = 1500; // 1.5 seconds total (faster)
 
     const updateProgress = () => {
       const elapsed = Date.now() - startTime;
