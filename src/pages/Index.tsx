@@ -35,7 +35,7 @@ const Index = () => {
             {/* Hero Section */}
             <section
               id="home"
-              className="relative min-h-screen testimonials-gradient flex items-center justify-center overflow-hidden"
+              className="relative min-h-screen bg-gradient-to-br from-deep-purple-900/95 via-deep-purple-800/95 to-deep-purple-700/95 backdrop-blur-sm flex items-center justify-center overflow-hidden"
             >
               {/* Animated background blobs */}
               <div className="absolute inset-0 overflow-hidden">

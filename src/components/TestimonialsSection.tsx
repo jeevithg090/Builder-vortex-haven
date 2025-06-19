@@ -73,7 +73,7 @@ const TestimonialsSection = () => {
   return (
     <section
       id="testimonials"
-      className="relative min-h-screen testimonials-gradient overflow-hidden"
+      className="relative min-h-screen bg-gradient-to-br from-deep-purple-900/95 via-deep-purple-800/95 to-deep-purple-700/95 overflow-hidden backdrop-blur-sm"
       ref={ref}
     >
       {/* Animated background blobs */}
