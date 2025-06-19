@@ -16,6 +16,9 @@ const RippleEffect = () => {
   const animationIdRef = useRef<number>();
   const mouseRef = useRef({ x: 0, y: 0 });
   const [isSupported, setIsSupported] = useState(true);
+  const [cssRipples, setCssRipples] = useState<
+    Array<{ id: number; x: number; y: number }>
+  >([]);
 
   // Vertex shader source
   const vertexShaderSource = `
