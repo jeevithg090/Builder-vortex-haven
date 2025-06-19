@@ -62,6 +62,25 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        // Custom colors for the new design
+        "deep-purple": {
+          DEFAULT: "#4C1D95",
+          50: "#F5F0FF",
+          100: "#EDE8FF",
+          200: "#DDD6FE",
+          300: "#C4B5FD",
+          400: "#A78BFA",
+          500: "#8B5CF6",
+          600: "#7C3AED",
+          700: "#6D28D9",
+          800: "#5B21B6",
+          900: "#4C1D95",
+        },
+        "light-purple": "#B8C0FF",
+        "card-purple": "#5D3FD3",
+        "pricing-purple": "#F5F0FF",
+        "vibrant-pink": "#FF0077",
+        "brand-purple": "#6B46C1",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -85,10 +104,52 @@ export default {
             height: "0",
           },
         },
+        typewriter: {
+          from: { width: "0" },
+          to: { width: "100%" },
+        },
+        blink: {
+          "0%, 50%": { opacity: "1" },
+          "51%, 100%": { opacity: "0" },
+        },
+        "slide-in-right": {
+          from: {
+            opacity: "0",
+            transform: "translateX(100px)",
+          },
+          to: {
+            opacity: "1",
+            transform: "translateX(0)",
+          },
+        },
+        "slide-in-up": {
+          from: {
+            opacity: "0",
+            transform: "translateY(50px)",
+          },
+          to: {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0px)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
+        "pulse-slow": {
+          "0%, 100%": { opacity: "0.1" },
+          "50%": { opacity: "0.3" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        typewriter: "typewriter 2s steps(12, end)",
+        blink: "blink 1s infinite",
+        "slide-in-right": "slide-in-right 0.8s ease-out",
+        "slide-in-up": "slide-in-up 0.6s ease-out",
+        float: "float 6s ease-in-out infinite",
+        "pulse-slow": "pulse-slow 4s ease-in-out infinite",
       },
     },
   },
