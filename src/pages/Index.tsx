@@ -84,7 +84,7 @@ const Index = () => {
                   <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
                     Welcome to
                     <br />
-                    <span className="text-light-purple">Happy Sellers</span>
+                    <span className="text-light-purple">The Agency</span>
                   </h1>
 
                   <motion.p
@@ -93,8 +93,8 @@ const Index = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.6 }}
                   >
-                    Transform your Amazon business with powerful review
-                    automation and analytics that drive real results
+                    Transform your brand with innovative design strategies and
+                    creative solutions that drive meaningful connections
                   </motion.p>
 
                   <motion.div
