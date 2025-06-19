@@ -281,21 +281,39 @@ const ShowcaseWork = () => {
                       scale: currentProject === index ? 1 : 0.8,
                     }}
                     transition={{ duration: 0.8, delay: 0.4 }}
-                    className="relative"
+                    className="relative group cursor-pointer"
+                    onClick={() => setSelectedProject(project)}
                   >
                     <div className="aspect-square bg-white/10 rounded-2xl overflow-hidden shadow-2xl">
                       <img
                         src={project.image}
                         alt={project.title}
-                        className="w-full h-full object-cover hover:scale-110 transition-transform duration-700"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
-                      <div className="absolute inset-0 bg-black/30 flex items-end p-6">
+                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-colors duration-300 flex flex-col justify-between p-6">
+                        <div className="flex justify-between items-start">
+                          <div className="text-white">
+                            <div className="text-lg font-bold mb-1">
+                              {project.client}
+                            </div>
+                            <div className="text-sm opacity-80">
+                              {project.year} • {project.category}
+                            </div>
+                          </div>
+                          <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <ExternalLink className="w-5 h-5 text-white" />
+                          </div>
+                        </div>
+
                         <div className="text-white">
                           <div className="text-sm font-semibold mb-2 opacity-80">
                             PROJECT {project.number}
                           </div>
-                          <div className="text-xs opacity-60">
+                          <div className="text-xs opacity-60 mb-2">
                             {project.tags.join(" • ")}
+                          </div>
+                          <div className="text-xs opacity-0 group-hover:opacity-80 transition-opacity duration-300">
+                            Click to view details
                           </div>
                         </div>
                       </div>
