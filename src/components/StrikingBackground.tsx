@@ -52,10 +52,9 @@ const CrossObject = ({ x, y, color, delay }: any) => {
 };
 
 // Ripple effect component
-const RippleEffect = ({ x, y, key }: any) => {
+const RippleEffect = ({ x, y }: any) => {
   return (
     <motion.div
-      key={key}
       className="absolute pointer-events-none"
       style={{
         left: x,
