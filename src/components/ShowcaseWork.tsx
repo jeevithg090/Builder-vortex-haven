@@ -247,15 +247,29 @@ const ShowcaseWork = () => {
                       ))}
                     </div>
 
-                    {/* Read More Button */}
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="inline-flex items-center gap-3 bg-white text-[#E60023] font-black px-8 py-4 rounded-lg uppercase tracking-wider hover:bg-gray-100 transition-colors duration-300 shadow-lg"
-                    >
-                      <span>Read More</span>
-                      <ArrowRight className="w-5 h-5" />
-                    </motion.button>
+                    {/* Action Buttons */}
+                    <div className="flex gap-4">
+                      <motion.button
+                        onClick={() =>
+                          setSelectedProject(projects[currentProject])
+                        }
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="inline-flex items-center gap-3 bg-white text-[#E60023] font-black px-6 py-3 rounded-lg uppercase tracking-wider hover:bg-gray-100 transition-colors duration-300 shadow-lg"
+                      >
+                        <span>View Details</span>
+                        <ArrowRight className="w-5 h-5" />
+                      </motion.button>
+
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="inline-flex items-center gap-3 border-2 border-white text-white font-black px-6 py-3 rounded-lg uppercase tracking-wider hover:bg-white hover:text-[#E60023] transition-colors duration-300"
+                      >
+                        <ExternalLink className="w-5 h-5" />
+                        <span>Live Site</span>
+                      </motion.button>
+                    </div>
                   </motion.div>
 
                   {/* Right side - Project image */}
