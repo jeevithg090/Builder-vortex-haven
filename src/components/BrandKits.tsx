@@ -55,24 +55,26 @@ const BrandKits = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="relative">
         {/* Gradient border container */}
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 rounded-2xl p-[2px]">
-          <div className="bg-black rounded-2xl h-full w-full" />
+          <div className="bg-background rounded-2xl h-full w-full" />
         </div>
 
         {/* Content container */}
-        <div className="relative bg-black rounded-2xl p-8 w-96">
+        <div className="relative bg-background rounded-2xl p-8 w-96">
           {/* Title */}
-          <h1 className="text-white text-2xl font-semibold mb-6">Brand Kits</h1>
+          <h1 className="text-foreground text-2xl font-semibold mb-6">
+            Brand Kits
+          </h1>
 
           {/* Brand kit cards */}
           <div className="space-y-4">
             {brandKits.map((kit) => (
               <div
                 key={kit.id}
-                className="bg-gray-900/50 border border-gray-700 rounded-lg p-4 flex items-center justify-between hover:bg-gray-800/50 transition-colors cursor-pointer"
+                className="bg-muted/50 border border-border rounded-lg p-4 flex items-center justify-between hover:bg-muted/70 transition-colors cursor-pointer"
                 onClick={() => toggleSelection(kit.id)}
               >
                 <div className="flex items-center space-x-4">
@@ -82,7 +84,7 @@ const BrandKits = () => {
                       className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all ${
                         kit.isSelected
                           ? "bg-purple-600 border-purple-600"
-                          : "border-gray-600 hover:border-gray-500"
+                          : "border-border hover:border-muted-foreground"
                       }`}
                     >
                       {kit.isSelected && (
@@ -95,13 +97,13 @@ const BrandKits = () => {
                   <CloudIcon color={kit.iconColor} />
 
                   {/* Brand name */}
-                  <span className="text-white text-lg font-medium">
+                  <span className="text-foreground text-lg font-medium">
                     {kit.name}
                   </span>
                 </div>
 
                 {/* Settings menu icon */}
-                <button className="text-gray-400 hover:text-gray-300 transition-colors p-1">
+                <button className="text-muted-foreground hover:text-foreground transition-colors p-1">
                   <MoreHorizontal className="w-5 h-5" />
                 </button>
               </div>
