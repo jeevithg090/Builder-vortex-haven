@@ -1,8 +1,26 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
-// Cross shape component with CSS-based 3D transforms
-const CrossObject = ({ x, y, color, delay }: any) => {
+// Car shape component that responds to mouse proximity
+const CarObject = ({ x, y, color, rotation, mousePos }: any) => {
+  const carX =
+    (x / 100) * (typeof window !== "undefined" ? window.innerWidth : 1920);
+  const carY =
+    (y / 100) * (typeof window !== "undefined" ? window.innerHeight : 1080);
+
+  // Calculate distance from mouse to car
+  const distance = Math.sqrt(
+    Math.pow(mousePos.x - carX, 2) + Math.pow(mousePos.y - carY, 2),
+  );
+
+  // Influence radius
+  const influenceRadius = 150;
+  const influence = Math.max(0, 1 - distance / influenceRadius);
+
+  // Calculate offset based on mouse position (jelly effect)
+  const offsetX = influence > 0 ? (mousePos.x - carX) * influence * 0.3 : 0;
+  const offsetY = influence > 0 ? (mousePos.y - carY) * influence * 0.3 : 0;
+
   return (
     <motion.div
       className="absolute pointer-events-none"
@@ -11,39 +29,79 @@ const CrossObject = ({ x, y, color, delay }: any) => {
         top: `${y}%`,
         transform: "translate(-50%, -50%)",
       }}
-      initial={{ opacity: 0, scale: 0, rotateX: 0, rotateY: 0 }}
       animate={{
-        opacity: 1,
-        scale: [0.8, 1.2, 1],
-        rotateX: [0, 360],
-        rotateY: [0, 360],
+        x: offsetX,
+        y: offsetY,
+        scale: 1 + influence * 0.4,
+        rotate: rotation + influence * 15,
       }}
       transition={{
-        duration: 8,
-        delay: delay,
-        repeat: Infinity,
-        ease: "linear",
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+        mass: 1,
       }}
     >
-      <div className="relative">
-        {/* Horizontal bar */}
+      <div
+        className="relative transform-gpu"
+        style={{
+          filter: `drop-shadow(0 0 ${10 + influence * 20}px ${color}60)`,
+        }}
+      >
+        {/* Car body */}
         <div
-          className={`absolute w-8 h-2 rounded-sm transform-gpu`}
+          className="absolute rounded-lg"
           style={{
             backgroundColor: color,
+            width: "32px",
+            height: "16px",
             left: "-16px",
-            top: "-4px",
-            boxShadow: `0 0 20px ${color}40`,
+            top: "-8px",
           }}
         />
-        {/* Vertical bar */}
+        {/* Car cabin */}
         <div
-          className={`absolute w-2 h-8 rounded-sm transform-gpu`}
+          className="absolute rounded-t-lg"
           style={{
             backgroundColor: color,
-            left: "-4px",
-            top: "-16px",
-            boxShadow: `0 0 20px ${color}40`,
+            width: "20px",
+            height: "12px",
+            left: "-10px",
+            top: "-14px",
+            opacity: 0.8,
+          }}
+        />
+        {/* Wheels */}
+        <div
+          className="absolute rounded-full"
+          style={{
+            backgroundColor: "#333",
+            width: "6px",
+            height: "6px",
+            left: "-12px",
+            top: "4px",
+          }}
+        />
+        <div
+          className="absolute rounded-full"
+          style={{
+            backgroundColor: "#333",
+            width: "6px",
+            height: "6px",
+            left: "6px",
+            top: "4px",
+          }}
+        />
+        {/* Headlights */}
+        <div
+          className="absolute rounded-full"
+          style={{
+            backgroundColor: "#FFF",
+            width: "3px",
+            height: "3px",
+            left: "13px",
+            top: "-2px",
+            opacity: influence > 0.3 ? 1 : 0.5,
           }}
         />
       </div>
