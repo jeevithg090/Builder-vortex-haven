@@ -1,0 +1,224 @@
+import { useState, useEffect, useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ArrowRight, FolderOpen } from "lucide-react";
+
+interface Project {
+  id: number;
+  title: string;
+  tags: string[];
+  image: string;
+  number: string;
+}
+
+const ShowcaseWork = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [currentProject, setCurrentProject] = useState(0);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
+  // Projects data
+  const projects: Project[] = [
+    {
+      id: 1,
+      title: "SWITCH - SOPRA STERIA KICK OFF 2025",
+      tags: ["NORWAY", "B2E EVENT"],
+      image: "/api/placeholder/400/400",
+      number: "01",
+    },
+    {
+      id: 2,
+      title: "GRAND HOTEL OSLO 150 YEARS",
+      tags: ["INTERNATIONAL", "NORWAY", "BRAND ACTIVATION"],
+      image: "/api/placeholder/400/400",
+      number: "02",
+    },
+    {
+      id: 3,
+      title:
+        "INFORMAL MEETING OF NATO MINISTERS OF FOREIGN AFFAIRS IN OSLO, NORWAY",
+      tags: ["INTERNATIONAL", "POLITICAL", "EVENT"],
+      image: "/api/placeholder/400/400",
+      number: "03",
+    },
+  ];
+
+  // Calculate horizontal movement
+  const projectsCount = projects.length;
+  const totalWidth = projectsCount * 100; // 100vw per project
+  const xTransform = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [0, -(totalWidth - 100)],
+  );
+
+  // Background numbers parallax (slower movement)
+  const numbersXTransform = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [0, -(totalWidth - 100) * 0.5],
+  );
+
+  // Update current project based on scroll
+  useEffect(() => {
+    const unsubscribe = scrollYProgress.onChange((latest) => {
+      const projectIndex = Math.floor(latest * projectsCount);
+      setCurrentProject(Math.min(projectIndex, projectsCount - 1));
+    });
+
+    return () => unsubscribe();
+  }, [scrollYProgress, projectsCount]);
+
+  return (
+    <div ref={containerRef} className="relative">
+      {/* Main section with increased height for scroll range */}
+      <div className="h-[400vh] bg-[#E60023]">
+        {/* Pinned content container */}
+        <div className="sticky top-0 h-screen overflow-hidden">
+          {/* Background Numbers */}
+          <motion.div
+            style={{ x: numbersXTransform }}
+            className="absolute inset-0 flex items-center justify-end pr-20 z-10"
+          >
+            <div className="flex space-x-[100vw]">
+              {projects.map((project, index) => (
+                <motion.div
+                  key={project.id}
+                  className="flex-shrink-0 w-[100vw] flex justify-end items-center pr-32"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{
+                    opacity: currentProject === index ? 1 : 0.3,
+                    scale: currentProject === index ? 1 : 0.8,
+                  }}
+                  transition={{ duration: 0.6 }}
+                >
+                  <span
+                    className="text-[20rem] font-black text-white select-none"
+                    style={{
+                      WebkitTextStroke: "3px white",
+                      WebkitTextFillColor: "transparent",
+                      fontFamily: "Impact, Arial Black, sans-serif",
+                    }}
+                  >
+                    {project.number}
+                  </span>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Main content - Projects */}
+          <motion.div
+            style={{ x: xTransform }}
+            className="absolute inset-0 flex z-20"
+          >
+            {projects.map((project, index) => (
+              <div
+                key={project.id}
+                className="flex-shrink-0 w-screen h-full flex items-center px-16 lg:px-24"
+              >
+                <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+                  {/* Left side - Text content */}
+                  <motion.div
+                    initial={{ opacity: 0, x: -50 }}
+                    animate={{
+                      opacity: currentProject === index ? 1 : 0,
+                      x: currentProject === index ? 0 : -50,
+                    }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    className="space-y-8"
+                  >
+                    {/* Title */}
+                    <h2 className="text-4xl lg:text-5xl xl:text-6xl font-black text-white leading-tight uppercase">
+                      {project.title}
+                    </h2>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-3">
+                      {project.tags.map((tag, tagIndex) => (
+                        <span
+                          key={tagIndex}
+                          className="px-4 py-2 text-sm font-semibold text-white uppercase tracking-wide border-2 border-white rounded-lg bg-transparent hover:bg-white hover:text-[#E60023] transition-colors duration-300"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Read More Button */}
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="inline-flex items-center gap-3 bg-white text-[#E60023] font-black px-8 py-4 rounded-lg uppercase tracking-wider hover:bg-gray-100 transition-colors duration-300 shadow-lg"
+                    >
+                      <span>Read More</span>
+                      <ArrowRight className="w-5 h-5" />
+                    </motion.button>
+                  </motion.div>
+
+                  {/* Right side - Project image */}
+                  <motion.div
+                    initial={{ opacity: 0, x: 50, scale: 0.8 }}
+                    animate={{
+                      opacity: currentProject === index ? 1 : 0,
+                      x: currentProject === index ? 0 : 50,
+                      scale: currentProject === index ? 1 : 0.8,
+                    }}
+                    transition={{ duration: 0.8, delay: 0.4 }}
+                    className="relative"
+                  >
+                    <div className="aspect-square bg-white/10 rounded-2xl overflow-hidden shadow-2xl">
+                      {/* Placeholder for actual images */}
+                      <div className="w-full h-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center">
+                        <div className="w-3/4 h-3/4 bg-white/10 rounded-lg flex items-center justify-center">
+                          <span className="text-white/50 text-2xl font-bold">
+                            PROJECT {project.number}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              </div>
+            ))}
+          </motion.div>
+
+          {/* Sticky "View All Cases" Button */}
+          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30">
+            <motion.button
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1 }}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+              className="inline-flex items-center gap-3 bg-white text-black font-bold px-8 py-4 rounded-xl uppercase tracking-wider shadow-xl hover:shadow-2xl transition-all duration-300"
+            >
+              <FolderOpen className="w-5 h-5" />
+              <span>View All Cases</span>
+            </motion.button>
+          </div>
+
+          {/* Progress indicator */}
+          <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 z-30">
+            <div className="flex space-x-3">
+              {projects.map((_, index) => (
+                <div
+                  key={index}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    currentProject === index
+                      ? "bg-white scale-125"
+                      : "bg-white/40"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ShowcaseWork;
