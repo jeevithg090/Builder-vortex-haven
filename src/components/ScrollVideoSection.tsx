@@ -13,71 +13,16 @@ const ScrollVideoSection = () => {
   const [showVideoModal, setShowVideoModal] = useState(false);
   const [isVideoHovered, setIsVideoHovered] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [cardSizePercent, setCardSizePercent] = useState(0);
-  const [isScrollLocked, setIsScrollLocked] = useState(false);
-  const [scrollLockThreshold] = useState(0.9); // 90% threshold
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start center", "end center"],
   });
 
-  // Track scroll progress and calculate card size percentage
+  // Track scroll progress for debugging
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     setScrollProgress(latest);
-
-    // Calculate card size percentage (0% to 100% based on scroll progress)
-    // When scrollYProgress reaches 0.7-1.0, the card is at its largest (90%-100% screen)
-    const sizePercent = Math.min(latest * 1.25, 1); // Scale factor to reach 100%
-    setCardSizePercent(sizePercent);
-
-    // Check if we should lock scrolling
-    const shouldLock = sizePercent < scrollLockThreshold && latest > 0.1;
-    setIsScrollLocked(shouldLock);
   });
-
-  // Scroll locking effect
-  useEffect(() => {
-    const handleScroll = (e: Event) => {
-      if (isScrollLocked && containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        const isInSection = rect.top <= 0 && rect.bottom >= window.innerHeight;
-
-        if (isInSection) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      }
-    };
-
-    const handleWheel = (e: WheelEvent) => {
-      if (isScrollLocked && containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        const isInSection = rect.top <= 0 && rect.bottom >= window.innerHeight;
-
-        if (isInSection) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      }
-    };
-
-    if (isScrollLocked) {
-      document.addEventListener("scroll", handleScroll, { passive: false });
-      document.addEventListener("wheel", handleWheel, { passive: false });
-      document.addEventListener("touchmove", handleScroll, { passive: false });
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-
-    return () => {
-      document.removeEventListener("scroll", handleScroll);
-      document.removeEventListener("wheel", handleWheel);
-      document.removeEventListener("touchmove", handleScroll);
-      document.body.style.overflow = "auto";
-    };
-  }, [isScrollLocked]);
 
   // Video card transformations - starts small, grows to fullscreen with clearer 90% threshold
   const videoScale = useTransform(
