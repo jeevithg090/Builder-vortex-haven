@@ -89,7 +89,7 @@ const RippleEffect = () => {
             vec2 distortionOffset = normalize(uv - ripplePos) * sin(rippleTime * 6.28) * 0.002;
 
             // Apply iridescent edge
-            finalColor = mix(finalColor, iridescentColor * 0.3 + baseColor,
+            finalColor = mix(finalColor, iridescentColor,
                            rippleIntensity * 0.6);
 
             // Apply subtle background distortion
