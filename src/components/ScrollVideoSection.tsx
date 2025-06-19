@@ -97,7 +97,7 @@ const ScrollVideoSection = () => {
     <>
       <section
         ref={containerRef}
-        className="relative min-h-[500vh] bg-gradient-to-br from-[#E0E5EC] via-[#F5F7FA] to-[#E8EDF5] overflow-hidden"
+        className="relative min-h-[500vh] bg-gradient-to-br from-[#E0E5EC] via-[#F5F7FA] to-[#E8EDF5] overflow-hidden mt-[13px] pt-[6px]"
       >
         {/* Background with wavy overlays */}
         <div className="sticky top-0 h-screen w-full flex items-center justify-center">
