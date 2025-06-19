@@ -106,27 +106,68 @@ const TestimonialsSection = () => {
   const containerRef = useRef(null);
   const isInView = useInView(containerRef, { once: true, margin: "-100px" });
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start end", "end start"],
+    offset: ["start start", "end end"],
   });
 
-  // Split animation transforms
-  const leftColumnY = useTransform(scrollYProgress, [0, 1], [0, -100]);
-  const rightColumnY = useTransform(scrollYProgress, [0, 1], [0, 100]);
-  const centerScale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
+  // Insane split animation transforms
+  const splitProgress = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
+  const fullscreenProgress = useTransform(scrollYProgress, [0.2, 0.4], [0, 1]);
+  const testimonialProgress = useTransform(
+    scrollYProgress,
+    [0.4, 1],
+    [0, testimonials.length - 1],
+  );
 
-  // Auto-rotate testimonials
+  // Split from middle animation
+  const leftSplit = useTransform(
+    splitProgress,
+    [0, 1],
+    [0, -window.innerWidth / 2],
+  );
+  const rightSplit = useTransform(
+    splitProgress,
+    [0, 1],
+    [0, window.innerWidth / 2],
+  );
+  const splitScale = useTransform(splitProgress, [0, 1], [1, 2.5]);
+  const splitRotate = useTransform(splitProgress, [0, 1], [0, 15]);
+
+  // Fullscreen expansion
+  const fullscreenScale = useTransform(fullscreenProgress, [0, 1], [0.3, 1]);
+  const fullscreenOpacity = useTransform(fullscreenProgress, [0, 1], [0, 1]);
+
+  // Testimonial cycling with insane effects
+  const currentTestimonial = useTransform(testimonialProgress, (latest) =>
+    Math.floor(latest),
+  );
+  const testimonialOffset = useTransform(
+    testimonialProgress,
+    (latest) => (latest % 1) * 100,
+  );
+
+  // Crazy particle effects
+  const particleRotation = useTransform(scrollYProgress, [0, 1], [0, 360]);
+  const particleScale = useTransform(scrollYProgress, [0, 0.5, 1], [0, 2, 0]);
+
+  // Update active testimonial
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % testimonials.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
+    const unsubscribe = currentTestimonial.onChange((latest) => {
+      setActiveIndex(Math.min(Math.floor(latest), testimonials.length - 1));
+    });
+    return () => unsubscribe();
+  }, [currentTestimonial]);
 
-  const leftTestimonials = testimonials.filter((_, index) => index % 2 === 0);
-  const rightTestimonials = testimonials.filter((_, index) => index % 2 === 1);
+  // Check if we're in fullscreen mode
+  useEffect(() => {
+    const unsubscribe = fullscreenProgress.onChange((latest) => {
+      setIsFullscreen(latest > 0.5);
+    });
+    return () => unsubscribe();
+  }, [fullscreenProgress]);
 
   return (
     <section
