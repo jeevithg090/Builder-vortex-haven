@@ -357,6 +357,229 @@ const ShowcaseWork = () => {
           </div>
         </div>
       </div>
+
+      {/* Project Detail Modal */}
+      <AnimatePresence>
+        {selectedProject && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedProject(null)}
+          >
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+            <motion.div
+              className="relative bg-white rounded-3xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Header */}
+              <div className="relative">
+                <img
+                  src={selectedProject.image}
+                  alt={selectedProject.title}
+                  className="w-full h-64 object-cover rounded-t-3xl"
+                />
+                <button
+                  onClick={() => setSelectedProject(null)}
+                  className="absolute top-4 right-4 w-10 h-10 bg-black/50 rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+                <div className="absolute bottom-4 left-6 text-white">
+                  <div className="text-sm font-semibold mb-1">
+                    PROJECT {selectedProject.number}
+                  </div>
+                  <div className="text-2xl font-bold">
+                    {selectedProject.client}
+                  </div>
+                </div>
+              </div>
+
+              {/* Modal Content */}
+              <div className="p-8">
+                <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                  {selectedProject.title}
+                </h2>
+
+                {/* Tags */}
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {selectedProject.tags.map((tag, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 bg-gray-100 text-gray-700 text-sm font-medium rounded-full"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Project Details Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                  <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <Calendar className="w-5 h-5 text-gray-600" />
+                    <div>
+                      <div className="text-sm text-gray-600">Year</div>
+                      <div className="font-semibold">
+                        {selectedProject.year}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <Users className="w-5 h-5 text-gray-600" />
+                    <div>
+                      <div className="text-sm text-gray-600">Duration</div>
+                      <div className="font-semibold">
+                        {selectedProject.duration}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                    <Award className="w-5 h-5 text-gray-600" />
+                    <div>
+                      <div className="text-sm text-gray-600">Category</div>
+                      <div className="font-semibold">
+                        {selectedProject.category}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Description */}
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">
+                    Project Overview
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {selectedProject.description}
+                  </p>
+                </div>
+
+                {/* Team */}
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">
+                    Team Members
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedProject.team.map((member, index) => (
+                      <span
+                        key={index}
+                        className="px-4 py-2 bg-purple-100 text-purple-700 font-medium rounded-lg"
+                      >
+                        {member}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Results */}
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">
+                    Key Results
+                  </h3>
+                  <ul className="space-y-2">
+                    {selectedProject.results.map((result, index) => (
+                      <li key={index} className="flex items-center gap-3">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <span className="text-gray-600">{result}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-4">
+                  <button className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-3 px-6 rounded-xl hover:shadow-lg transition-all">
+                    View Live Site
+                  </button>
+                  <button className="flex-1 border-2 border-gray-300 text-gray-700 font-bold py-3 px-6 rounded-xl hover:bg-gray-50 transition-all">
+                    Download Case Study
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* All Projects Gallery Modal */}
+      <AnimatePresence>
+        {showAllProjects && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowAllProjects(false)}
+          >
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
+            <motion.div
+              className="relative bg-white rounded-3xl max-w-6xl w-full max-h-[90vh] overflow-y-auto"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-8">
+                <div className="flex justify-between items-center mb-8">
+                  <h2 className="text-3xl font-bold text-gray-900">
+                    All Projects
+                  </h2>
+                  <button
+                    onClick={() => setShowAllProjects(false)}
+                    className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {projects.map((project) => (
+                    <motion.div
+                      key={project.id}
+                      className="group cursor-pointer"
+                      onClick={() => {
+                        setShowAllProjects(false);
+                        setSelectedProject(project);
+                      }}
+                      whileHover={{ y: -5 }}
+                    >
+                      <div className="aspect-square rounded-2xl overflow-hidden mb-4">
+                        <img
+                          src={project.image}
+                          alt={project.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                      </div>
+                      <div className="text-center">
+                        <h3 className="font-bold text-gray-900 mb-2">
+                          {project.client}
+                        </h3>
+                        <p className="text-sm text-gray-600 mb-2">
+                          {project.category}
+                        </p>
+                        <div className="flex justify-center gap-1">
+                          {project.tags.slice(0, 2).map((tag, index) => (
+                            <span
+                              key={index}
+                              className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
