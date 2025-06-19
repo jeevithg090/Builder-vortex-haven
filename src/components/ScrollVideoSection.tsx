@@ -393,7 +393,7 @@ const ScrollVideoSection = () => {
           >
             {/* Backdrop */}
             <motion.div
-              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+              className="absolute inset-0 bg-background/80 backdrop-blur-sm"
               onClick={closeVideoModal}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -402,7 +402,7 @@ const ScrollVideoSection = () => {
 
             {/* Video Container */}
             <motion.div
-              className="relative w-[90vw] h-[90vh] max-w-6xl bg-black rounded-2xl overflow-hidden shadow-2xl"
+              className="relative w-[90vw] h-[90vh] max-w-6xl bg-background rounded-2xl overflow-hidden shadow-2xl border border-border"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
