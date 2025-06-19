@@ -48,6 +48,18 @@ const ShowcaseWork = () => {
       image:
         "https://images.pexels.com/photos/4466115/pexels-photo-4466115.jpeg",
       number: "01",
+      description:
+        "Complete brand transformation for a cutting-edge design studio, including logo design, visual identity system, and brand guidelines that positioned them as industry leaders.",
+      client: "Pixel Studio",
+      year: "2024",
+      duration: "3 months",
+      team: ["Sarah Chen", "Marcus Johnson", "Emma Rodriguez"],
+      results: [
+        "300% increase in client inquiries",
+        "Featured in Design Week",
+        "Won Best Rebrand Award 2024",
+      ],
+      category: "Brand Identity",
     },
     {
       id: 2,
@@ -56,6 +68,18 @@ const ShowcaseWork = () => {
       image:
         "https://images.pexels.com/photos/1595385/pexels-photo-1595385.jpeg",
       number: "02",
+      description:
+        "Designed and developed a revolutionary collaboration platform that connects creative teams worldwide, featuring real-time collaboration tools and project management.",
+      client: "CollabSpace",
+      year: "2024",
+      duration: "6 months",
+      team: ["David Park", "Lisa Thompson", "James Wilson"],
+      results: [
+        "10,000+ active users in first month",
+        "85% user retention rate",
+        "$2M seed funding raised",
+      ],
+      category: "Digital Platform",
     },
     {
       id: 3,
@@ -64,6 +88,18 @@ const ShowcaseWork = () => {
       image:
         "https://images.pexels.com/photos/7238759/pexels-photo-7238759.jpeg",
       number: "03",
+      description:
+        "Architectural and interior design project for a modern creative workspace that fosters innovation and collaboration among designers and developers.",
+      client: "Future Works",
+      year: "2023",
+      duration: "4 months",
+      team: ["Emma Rodriguez", "Sarah Chen"],
+      results: [
+        "50% increase in productivity",
+        "Best Workspace Design Award",
+        "Featured in Architectural Digest",
+      ],
+      category: "Space Design",
     },
     {
       id: 4,
@@ -72,6 +108,18 @@ const ShowcaseWork = () => {
       image:
         "https://images.pexels.com/photos/3989394/pexels-photo-3989394.jpeg",
       number: "04",
+      description:
+        "Luxury fragrance brand development including packaging design, retail experience, and digital marketing strategy that elevated the brand to premium market positioning.",
+      client: "Essence Luxe",
+      year: "2023",
+      duration: "5 months",
+      team: ["Marcus Johnson", "David Park", "Lisa Thompson"],
+      results: [
+        "200% increase in brand value",
+        "International market expansion",
+        "Celebrity endorsements secured",
+      ],
+      category: "Luxury Branding",
     },
     {
       id: 5,
@@ -80,6 +128,18 @@ const ShowcaseWork = () => {
       image:
         "https://images.pexels.com/photos/6248976/pexels-photo-6248976.jpeg",
       number: "05",
+      description:
+        "Comprehensive brand strategy workshop and planning session that transformed how teams approach creative problem-solving and brand development.",
+      client: "Innovation Labs",
+      year: "2024",
+      duration: "2 months",
+      team: ["Sarah Chen", "Emma Rodriguez", "James Wilson"],
+      results: [
+        "40% faster project delivery",
+        "90% client satisfaction",
+        "New methodology adopted industry-wide",
+      ],
+      category: "Strategy Consulting",
     },
   ];
 
