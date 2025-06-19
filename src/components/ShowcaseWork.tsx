@@ -23,25 +23,43 @@ const ShowcaseWork = () => {
   const projects: Project[] = [
     {
       id: 1,
-      title: "SWITCH - SOPRA STERIA KICK OFF 2025",
-      tags: ["NORWAY", "B2E EVENT"],
-      image: "/api/placeholder/400/400",
+      title: "PIXEL STUDIO BRAND IDENTITY",
+      tags: ["BRANDING", "DESIGN", "IDENTITY"],
+      image:
+        "https://images.pexels.com/photos/4466115/pexels-photo-4466115.jpeg",
       number: "01",
     },
     {
       id: 2,
-      title: "GRAND HOTEL OSLO 150 YEARS",
-      tags: ["INTERNATIONAL", "NORWAY", "BRAND ACTIVATION"],
-      image: "/api/placeholder/400/400",
+      title: "CREATIVE TEAM COLLABORATION HUB",
+      tags: ["DIGITAL", "WORKSPACE", "INNOVATION"],
+      image:
+        "https://images.pexels.com/photos/1595385/pexels-photo-1595385.jpeg",
       number: "02",
     },
     {
       id: 3,
-      title:
-        "INFORMAL MEETING OF NATO MINISTERS OF FOREIGN AFFAIRS IN OSLO, NORWAY",
-      tags: ["INTERNATIONAL", "POLITICAL", "EVENT"],
-      image: "/api/placeholder/400/400",
+      title: "MODERN DESIGN WORKSPACE",
+      tags: ["STUDIO", "CREATIVE", "ENVIRONMENT"],
+      image:
+        "https://images.pexels.com/photos/7238759/pexels-photo-7238759.jpeg",
       number: "03",
+    },
+    {
+      id: 4,
+      title: "LUXURY BRAND EXPERIENCE",
+      tags: ["PREMIUM", "BRANDING", "LIFESTYLE"],
+      image:
+        "https://images.pexels.com/photos/3989394/pexels-photo-3989394.jpeg",
+      number: "04",
+    },
+    {
+      id: 5,
+      title: "STRATEGIC PLANNING SESSION",
+      tags: ["STRATEGY", "TEAM", "INNOVATION"],
+      image:
+        "https://images.pexels.com/photos/6248976/pexels-photo-6248976.jpeg",
+      number: "05",
     },
   ];
 
