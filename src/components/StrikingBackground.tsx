@@ -139,13 +139,13 @@ const StrikingBackground = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const rippleId = useRef(0);
 
-  // Generate cross objects
-  const crossObjects = Array.from({ length: 30 }, (_, i) => ({
+  // Generate car objects with random orientations
+  const carObjects = Array.from({ length: 30 }, (_, i) => ({
     id: i,
     x: Math.random() * 100,
     y: Math.random() * 100,
     color: ["#0000FF", "#000000", "#CCCCCC"][Math.floor(Math.random() * 3)],
-    delay: Math.random() * 5,
+    rotation: Math.random() * 360, // Random initial rotation
   }));
 
   const handleMouseMove = (e: React.MouseEvent) => {
