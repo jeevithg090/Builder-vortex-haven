@@ -4,38 +4,63 @@ import {
   useScroll,
   useTransform,
   AnimatePresence,
+  useInView,
 } from "framer-motion";
-import { Play, X } from "lucide-react";
+import { Play, X, Volume2, Maximize } from "lucide-react";
 
 const ScrollVideoSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const videoSectionRef = useRef<HTMLDivElement>(null);
   const [showVideoModal, setShowVideoModal] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+
+  const isInView = useInView(containerRef, { margin: "-20%" });
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
   });
 
-  // Transform values based on scroll progress
+  // More refined transform values for smooth animations
   const waveScale = useTransform(
     scrollYProgress,
-    [0, 0.3, 0.7, 1],
-    [1, 1.5, 2.5, 3],
+    [0, 0.2, 0.5, 0.8, 1],
+    [1, 1.2, 2, 3.5, 5],
   );
-  const waveRotate = useTransform(
+
+  const waveOpacity = useTransform(
     scrollYProgress,
-    [0, 0.3, 0.7, 1],
-    [0, 15, 45, 90],
+    [0, 0.3, 0.6, 1],
+    [0.8, 0.6, 0.3, 0.1],
   );
+
+  const backgroundScale = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.5, 0.8, 1],
+    [0.95, 1, 1.15, 1.3, 1.5],
+  );
+
   const backgroundOpacity = useTransform(
     scrollYProgress,
-    [0, 0.3, 0.7, 1],
-    [0.3, 0.6, 0.9, 1],
+    [0, 0.2, 0.5, 0.8, 1],
+    [0.4, 0.7, 0.9, 1, 1],
   );
-  const contentScale = useTransform(
+
+  const playButtonScale = useTransform(
     scrollYProgress,
-    [0, 0.3, 0.7, 1],
-    [0.8, 1, 1.2, 1.5],
+    [0.3, 0.5, 0.7],
+    [0, 1, 1],
   );
+
+  const playButtonOpacity = useTransform(
+    scrollYProgress,
+    [0.3, 0.5, 0.7],
+    [0, 1, 1],
+  );
+
+  const textScale = useTransform(scrollYProgress, [0.4, 0.6, 0.8], [0.8, 1, 1]);
+
+  const textOpacity = useTransform(scrollYProgress, [0.4, 0.6, 0.8], [0, 1, 1]);
 
   const openVideoModal = () => {
     setShowVideoModal(true);
@@ -57,150 +82,270 @@ const ScrollVideoSection = () => {
     <>
       <section
         ref={containerRef}
-        className="relative min-h-[300vh] bg-[#E0E5EC] overflow-hidden"
+        className="relative min-h-[400vh] bg-gradient-to-br from-[#E0E5EC] via-[#F5F7FA] to-[#E8EDF5] overflow-hidden"
       >
-        {/* Background Image Container */}
-        <div className="sticky top-0 h-screen w-full">
+        {/* Background Container */}
+        <div className="sticky top-0 h-screen w-full flex items-center justify-center">
           {/* Background video that transforms during scroll */}
           <motion.div
-            className="absolute inset-0"
+            className="absolute inset-0 rounded-3xl overflow-hidden mx-8 my-8"
             style={{
               opacity: backgroundOpacity,
-              scale: contentScale,
+              scale: backgroundScale,
             }}
           >
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-full object-cover rounded-lg"
-            >
-              <source
-                src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-                type="video/mp4"
-              />
-              <source
-                src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"
-                type="video/mp4"
-              />
-              {/* Fallback to a simple animation if video fails */}
-              <div className="w-full h-full bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 animate-pulse" />
-            </video>
+            <div className="relative w-full h-full">
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover"
+              >
+                <source
+                  src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                  type="video/mp4"
+                />
+                <source
+                  src="https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4"
+                  type="video/mp4"
+                />
+                {/* Fallback gradient */}
+              </video>
+
+              {/* Gradient overlay for better text readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />
+
+              {/* Ambient glow effect */}
+              <div className="absolute -inset-4 bg-gradient-to-r from-purple-400/20 via-pink-400/20 to-blue-400/20 blur-xl -z-10" />
+            </div>
           </motion.div>
 
-          {/* Wavy Purple Overlays */}
+          {/* Enhanced Wavy Overlays */}
           <motion.div
             className="absolute inset-0 pointer-events-none"
             style={{
               scale: waveScale,
-              rotate: waveRotate,
+              opacity: waveOpacity,
             }}
           >
-            {/* First wave from top-left */}
+            {/* Primary wave - flowing from top */}
             <motion.div
-              className="absolute -top-20 -left-20 w-96 h-96 bg-[#B3A4EA] opacity-70 rounded-full"
-              style={{
-                clipPath: "ellipse(60% 40% at 30% 30%)",
-                transform: "rotate(-30deg) skew(-15deg)",
-              }}
+              className="absolute -top-32 -left-32 w-[500px] h-[500px]"
               animate={{
-                x: [0, 50, 0],
-                y: [0, -30, 0],
-                scale: [1, 1.1, 1],
-              }}
-              transition={{
-                duration: 8,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-
-            {/* Second wave from bottom */}
-            <motion.div
-              className="absolute -bottom-20 -left-10 w-80 h-80 bg-[#B3A4EA] opacity-60 rounded-full"
-              style={{
-                clipPath: "ellipse(70% 50% at 50% 70%)",
-                transform: "rotate(45deg) skew(20deg)",
-              }}
-              animate={{
-                x: [0, -40, 0],
-                y: [0, 40, 0],
-                scale: [1, 0.9, 1],
-              }}
-              transition={{
-                duration: 10,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 2,
-              }}
-            />
-
-            {/* Third wave curving across */}
-            <motion.div
-              className="absolute top-1/2 left-1/2 w-[600px] h-32 bg-[#8B7CE8] opacity-50"
-              style={{
-                clipPath:
-                  "polygon(0% 50%, 25% 20%, 50% 80%, 75% 30%, 100% 60%, 100% 100%, 0% 100%)",
-                transform: "translate(-50%, -50%) rotate(15deg)",
-              }}
-              animate={{
-                rotate: [15, 25, 15],
-                scaleX: [1, 1.2, 1],
+                x: [0, 60, 0],
+                y: [0, -40, 0],
+                scale: [1, 1.15, 1],
               }}
               transition={{
                 duration: 12,
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-            />
+            >
+              <div
+                className="w-full h-full bg-gradient-to-br from-[#B3A4EA]/80 via-[#8B7CE8]/60 to-[#A78BFA]/70 rounded-full blur-sm"
+                style={{
+                  clipPath: "ellipse(65% 45% at 35% 40%)",
+                  transform: "rotate(-25deg) skew(-12deg)",
+                }}
+              />
+            </motion.div>
+
+            {/* Secondary wave - organic flow */}
+            <motion.div
+              className="absolute -bottom-40 -right-20 w-[600px] h-[400px]"
+              animate={{
+                x: [0, -50, 0],
+                y: [0, 30, 0],
+                rotate: [45, 55, 45],
+              }}
+              transition={{
+                duration: 15,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 3,
+              }}
+            >
+              <div
+                className="w-full h-full bg-gradient-to-tl from-[#C4B5FD]/70 via-[#DDD6FE]/50 to-[#E9D5FF]/60 rounded-full blur-sm"
+                style={{
+                  clipPath: "ellipse(55% 70% at 60% 30%)",
+                  transform: "skew(15deg, -8deg)",
+                }}
+              />
+            </motion.div>
+
+            {/* Tertiary wave - crossing diagonal */}
+            <motion.div
+              className="absolute top-1/3 left-1/4 w-[800px] h-[200px]"
+              animate={{
+                rotate: [20, 35, 20],
+                scaleX: [1, 1.3, 1],
+                scaleY: [1, 0.8, 1],
+              }}
+              transition={{
+                duration: 18,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 1,
+              }}
+            >
+              <div
+                className="w-full h-full bg-gradient-to-r from-[#8B5CF6]/40 via-[#A78BFA]/60 to-[#C4B5FD]/40 blur-sm"
+                style={{
+                  clipPath:
+                    "polygon(0% 60%, 30% 20%, 60% 80%, 100% 40%, 100% 100%, 0% 100%)",
+                }}
+              />
+            </motion.div>
           </motion.div>
 
-          {/* ABOUT US Button */}
+          {/* ABOUT US Button - Enhanced */}
           <motion.div
-            className="absolute top-20 right-20 z-10"
-            initial={{ opacity: 1 }}
+            className="absolute top-8 right-8 z-30"
             style={{
-              opacity: useTransform(scrollYProgress, [0, 0.3], [1, 0]),
+              opacity: useTransform(scrollYProgress, [0, 0.2], [1, 0]),
+              y: useTransform(scrollYProgress, [0, 0.2], [0, -50]),
             }}
           >
-            <button className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:bg-gray-50">
-              <span className="w-2 h-2 bg-black rounded-full"></span>
-              <span className="text-sm font-medium text-gray-800 uppercase tracking-wide">
+            <motion.button
+              className="group flex items-center gap-3 bg-white/95 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-500 hover:bg-white border border-gray-200/50"
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span className="w-2.5 h-2.5 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full group-hover:scale-110 transition-transform duration-300"></span>
+              <span className="text-sm font-semibold text-gray-800 uppercase tracking-wider">
                 ABOUT US
               </span>
-            </button>
+            </motion.button>
           </motion.div>
 
-          {/* PLAY REEL Overlay - appears during scroll */}
+          {/* PLAY REEL Section - Enhanced with better animations */}
           <motion.div
-            className="absolute inset-0 flex flex-col items-center justify-center z-20"
+            className="absolute inset-0 flex flex-col items-center justify-center z-20 px-8"
             style={{
-              opacity: useTransform(scrollYProgress, [0.4, 0.7], [0, 1]),
+              opacity: playButtonOpacity,
+              scale: playButtonScale,
             }}
           >
-            <motion.h2
-              className="text-white text-6xl md:text-8xl font-bold mb-8 tracking-wider"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
+            {/* Main heading with gradient text */}
+            <motion.div
+              className="text-center mb-12"
+              style={{
+                opacity: textOpacity,
+                scale: textScale,
+              }}
             >
-              PLAY REEL
-            </motion.h2>
+              <h2 className="text-6xl md:text-8xl lg:text-9xl font-black mb-4 bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-2xl">
+                PLAY
+              </h2>
+              <h2 className="text-6xl md:text-8xl lg:text-9xl font-black bg-gradient-to-r from-white via-gray-100 to-white bg-clip-text text-transparent drop-shadow-2xl">
+                REEL
+              </h2>
+            </motion.div>
 
+            {/* Enhanced Play Button */}
             <motion.button
               onClick={openVideoModal}
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
               className="group relative"
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
+              style={{
+                opacity: playButtonOpacity,
+              }}
             >
-              <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-2xl group-hover:shadow-white/20 transition-all duration-300">
-                <Play className="w-8 h-8 text-black ml-1" fill="currentColor" />
+              {/* Outer glow ring */}
+              <motion.div
+                className="absolute -inset-4 bg-gradient-to-r from-purple-500/30 via-pink-500/30 to-blue-500/30 rounded-full blur-xl"
+                animate={{
+                  scale: isHovering ? [1, 1.2, 1] : 1,
+                  opacity: isHovering ? [0.5, 0.8, 0.5] : 0.5,
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: isHovering ? Infinity : 0,
+                  ease: "easeInOut",
+                }}
+              />
+
+              {/* Main button */}
+              <div className="relative w-32 h-32 bg-gradient-to-br from-white via-gray-50 to-white rounded-full flex items-center justify-center shadow-2xl group-hover:shadow-white/30 border-4 border-white/20 backdrop-blur-sm transition-all duration-500">
+                {/* Inner play icon */}
+                <motion.div
+                  animate={{
+                    scale: isHovering ? [1, 1.1, 1] : 1,
+                  }}
+                  transition={{
+                    duration: 0.6,
+                    repeat: isHovering ? Infinity : 0,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <Play
+                    className="w-12 h-12 text-gray-800 ml-2"
+                    fill="currentColor"
+                  />
+                </motion.div>
+
+                {/* Ripple effect on hover */}
+                <motion.div
+                  className="absolute inset-0 border-2 border-white/50 rounded-full"
+                  animate={
+                    isHovering
+                      ? {
+                          scale: [1, 1.5],
+                          opacity: [0.8, 0],
+                        }
+                      : {}
+                  }
+                  transition={{
+                    duration: 1.5,
+                    repeat: isHovering ? Infinity : 0,
+                    ease: "easeOut",
+                  }}
+                />
               </div>
+
+              {/* Floating elements around button */}
+              <motion.div
+                className="absolute -top-6 -right-6 w-3 h-3 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full"
+                animate={{
+                  y: [0, -10, 0],
+                  opacity: [0.6, 1, 0.6],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+              <motion.div
+                className="absolute -bottom-4 -left-8 w-2 h-2 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full"
+                animate={{
+                  y: [0, 8, 0],
+                  opacity: [0.4, 0.8, 0.4],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 1,
+                }}
+              />
             </motion.button>
+
+            {/* Subtle instruction text */}
+            <motion.p
+              className="text-white/80 text-lg font-medium mt-8 tracking-wide"
+              style={{
+                opacity: textOpacity,
+              }}
+            >
+              Click to watch our story
+            </motion.p>
           </motion.div>
         </div>
 
