@@ -1,25 +1,67 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
-import { Play } from "lucide-react";
+import { Play, Star, Award, Zap, Users } from "lucide-react";
 
 const testimonials = [
   {
     id: 1,
-    text: "This platform completely transformed my Amazon business. The review automation saved me hours of manual work and increased my response rate by 300%. I've seen a significant boost in sales since implementing their system.",
-    author: "Watchchem - UK Amazon Seller",
+    text: "The Agency transformed our entire brand identity. Their strategic approach and creative vision resulted in a 400% increase in brand recognition. The team's attention to detail and innovative designs exceeded all our expectations.",
+    author: "Sarah Johnson",
+    company: "Tech Innovators Inc.",
+    role: "CEO",
     videoThumbnail: true,
+    rating: 5,
+    project: "Complete Brand Overhaul",
   },
   {
     id: 2,
-    text: "As a new seller, I was overwhelmed with managing reviews and customer feedback. Happy Sellers made it so simple and intuitive. Their analytics dashboard gives me insights I never had before. Highly recommended!",
-    author: "Sophie Wilson - USA Amazon Seller",
+    text: "Working with The Agency was a game-changer for our startup. They didn't just design our website; they crafted our entire digital presence. The result? 250% increase in user engagement and triple our conversion rate.",
+    author: "Marcus Chen",
+    company: "GreenTech Solutions",
+    role: "Founder",
     videoThumbnail: false,
+    rating: 5,
+    project: "Digital Transformation",
   },
   {
     id: 3,
-    text: "The customer support is exceptional, and the automation features are exactly what I needed to scale my business. I'm now managing 10x more orders with the same effort. The ROI has been incredible.",
-    author: "Emily James - USA Amazon Seller",
+    text: "Professional, creative, and results-driven. The Agency delivered a brand strategy that perfectly captured our vision. Their campaign increased our market presence by 300% and established us as industry leaders.",
+    author: "Emma Rodriguez",
+    company: "Luxe Lifestyle",
+    role: "Marketing Director",
     videoThumbnail: true,
+    rating: 5,
+    project: "Brand Strategy & Campaign",
+  },
+  {
+    id: 4,
+    text: "The Agency's innovative approach to our rebranding was exceptional. They understood our vision and transformed it into a compelling brand story. Our client acquisition increased by 180% post-launch.",
+    author: "David Park",
+    company: "Urban Architects",
+    role: "Creative Director",
+    videoThumbnail: false,
+    rating: 5,
+    project: "Architecture Firm Rebrand",
+  },
+  {
+    id: 5,
+    text: "From concept to execution, The Agency delivered beyond expectations. Their design thinking and strategic insights helped us connect with our audience in ways we never imagined. Truly transformational work.",
+    author: "Lisa Thompson",
+    company: "Future Foods",
+    role: "Brand Manager",
+    videoThumbnail: true,
+    rating: 5,
+    project: "Product Launch Campaign",
+  },
+  {
+    id: 6,
+    text: "The Agency doesn't just create designs—they create experiences. Their holistic approach to our brand refresh resulted in a 220% increase in customer loyalty and significant market share growth.",
+    author: "James Wilson",
+    company: "Nordic Wellness",
+    role: "CEO",
+    videoThumbnail: false,
+    rating: 5,
+    project: "Wellness Brand Refresh",
   },
 ];
 
