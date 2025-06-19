@@ -49,94 +49,89 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
       >
         {/* Phase 1: Large L Shape - Reference Image 1 */}
         {animationPhase === 1 && (
-          <div className="relative">
-            {/* Vertical part of large L */}
-            <motion.div
-              className="bg-white absolute"
-              initial={{ width: 40, height: 200, x: 0, y: -100 }}
-              animate={{ width: 40, height: 200, x: 0, y: -100 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            />
-            {/* Horizontal part of large L */}
-            <motion.div
-              className="bg-white absolute"
-              initial={{ width: 160, height: 40, x: 0, y: 60 }}
-              animate={{ width: 160, height: 40, x: 0, y: 60 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-            />
-            {/* "100" text bottom left */}
-            <div
-              className="absolute text-white text-7xl font-bold"
-              style={{ bottom: "-200px", left: "-300px" }}
-            >
+          <>
+            <div className="relative">
+              {/* Vertical part of large L */}
+              <motion.div
+                className="bg-white"
+                style={{ width: "48px", height: "240px" }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              />
+              {/* Horizontal part of large L */}
+              <motion.div
+                className="bg-white absolute bottom-0 left-0"
+                style={{ width: "192px", height: "48px" }}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+              />
+            </div>
+            {/* "100" text fixed bottom left */}
+            <div className="fixed bottom-8 left-8 text-white text-8xl font-bold">
               100
             </div>
-          </div>
+          </>
         )}
 
         {/* Phase 2: Smaller L Shape - Reference Image 2 */}
         {animationPhase === 2 && (
-          <div className="relative">
-            {/* Vertical part of smaller L */}
-            <motion.div
-              className="bg-white absolute"
-              initial={{ width: 40, height: 200, x: 0, y: -100 }}
-              animate={{ width: 30, height: 120, x: 0, y: -60 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            />
-            {/* Horizontal part of smaller L */}
-            <motion.div
-              className="bg-white absolute"
-              initial={{ width: 160, height: 40, x: 0, y: 60 }}
-              animate={{ width: 90, height: 30, x: 0, y: 30 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-            />
-            {/* "100" text bottom left */}
-            <div
-              className="absolute text-white text-7xl font-bold"
-              style={{ bottom: "-200px", left: "-300px" }}
-            >
+          <>
+            <div className="relative">
+              {/* Vertical part of smaller L */}
+              <motion.div
+                className="bg-white"
+                initial={{ width: "48px", height: "240px" }}
+                animate={{ width: "32px", height: "120px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              />
+              {/* Horizontal part of smaller L */}
+              <motion.div
+                className="bg-white absolute bottom-0 left-0"
+                initial={{ width: "192px", height: "48px" }}
+                animate={{ width: "96px", height: "32px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+              />
+            </div>
+            {/* "100" text fixed bottom left */}
+            <div className="fixed bottom-8 left-8 text-white text-8xl font-bold">
               100
             </div>
-          </div>
+          </>
         )}
 
-        {/* Phase 3: Transform to horizontal bar - Reference Image 3 */}
+        {/* Phase 3: Transform to horizontal bar */}
         {animationPhase === 3 && (
-          <div className="relative">
+          <>
             <motion.div
               className="bg-white"
-              initial={{ width: 90, height: 30 }}
-              animate={{ width: 200, height: 20 }}
+              initial={{ width: "96px", height: "32px" }}
+              animate={{ width: "200px", height: "24px" }}
               transition={{ duration: 0.6, ease: "easeOut" }}
             />
-            {/* "100" text bottom left */}
-            <div
-              className="absolute text-white text-7xl font-bold"
-              style={{ bottom: "-200px", left: "-300px" }}
-            >
+            {/* "100" text fixed bottom left */}
+            <div className="fixed bottom-8 left-8 text-white text-8xl font-bold">
               100
             </div>
-          </div>
+          </>
         )}
 
         {/* Phase 4: Horizontal bar with countdown - Reference Image 3 */}
         {animationPhase === 4 && (
-          <div className="relative">
+          <>
             <motion.div
-              className="bg-white h-5"
-              initial={{ width: 200 }}
-              animate={{ width: 220 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="bg-white"
+              style={{ width: "200px", height: "24px" }}
+              initial={{ opacity: 1 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.1 }}
             />
-            {/* Countdown number */}
-            <div
-              className="absolute text-white text-7xl font-bold"
-              style={{ bottom: "-200px", left: "-300px" }}
-            >
+            {/* Countdown number fixed bottom left */}
+            <div className="fixed bottom-8 left-8 text-white text-8xl font-bold">
               {String(progress).padStart(3, "0")}
             </div>
-          </div>
+          </>
         )}
 
         {/* Phase 5: Diagonal wipe */}
