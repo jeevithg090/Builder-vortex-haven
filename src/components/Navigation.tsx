@@ -51,7 +51,7 @@ const Navigation = () => {
               href="#home"
               className="text-xl font-bold text-white hover:text-light-purple transition-colors"
             >
-              Happy Sellers
+              The Agency
             </a>
           </motion.div>
 

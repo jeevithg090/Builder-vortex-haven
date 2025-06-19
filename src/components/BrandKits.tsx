@@ -27,14 +27,14 @@ interface BrandKit {
 const BrandKits = () => {
   const [brandKits, setBrandKits] = useState<BrandKit[]>([
     {
-      id: "ecorp",
-      name: "ECorp",
+      id: "pixel-studio",
+      name: "Pixel Studio",
       iconColor: "#10B981", // green-500
       isSelected: false,
     },
     {
-      id: "icorp",
-      name: "ICorp",
+      id: "design-lab",
+      name: "Design Lab",
       iconColor: "#F59E0B", // amber-500
       isSelected: false,
     },

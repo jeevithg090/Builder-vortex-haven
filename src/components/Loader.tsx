@@ -9,7 +9,7 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
   useEffect(() => {
     // Phase 1: Linear progress bar grows from 0 to 100
     const startTime = Date.now();
-    const duration = 2500; // 2.5 seconds total
+    const duration = 1500; // 1.5 seconds total (faster)
 
     const updateProgress = () => {
       const elapsed = Date.now() - startTime;
@@ -25,13 +25,13 @@ const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
         requestAnimationFrame(updateProgress);
       } else {
         // Progress complete, start breaking animation
-        setTimeout(() => setAnimationPhase(2), 300); // Break and rotate
-        setTimeout(() => setAnimationPhase(3), 1000); // L comes outward
-        setTimeout(() => setAnimationPhase(4), 2000); // Final horizontal bar
+        setTimeout(() => setAnimationPhase(2), 100); // Break and rotate
+        setTimeout(() => setAnimationPhase(3), 300); // L comes outward
+        setTimeout(() => setAnimationPhase(4), 600); // Final horizontal bar
         setTimeout(() => {
           setAnimationPhase(5);
-          setTimeout(onLoadComplete, 500);
-        }, 2600);
+          setTimeout(onLoadComplete, 200);
+        }, 900);
       }
     };
 
