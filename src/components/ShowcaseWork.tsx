@@ -1,6 +1,19 @@
 import { useState, useEffect, useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowRight, FolderOpen } from "lucide-react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
+import {
+  ArrowRight,
+  FolderOpen,
+  X,
+  ExternalLink,
+  Calendar,
+  Users,
+  Award,
+} from "lucide-react";
 
 interface Project {
   id: number;
@@ -8,6 +21,13 @@ interface Project {
   tags: string[];
   image: string;
   number: string;
+  description: string;
+  client: string;
+  year: string;
+  duration: string;
+  team: string[];
+  results: string[];
+  category: string;
 }
 
 const ShowcaseWork = () => {
