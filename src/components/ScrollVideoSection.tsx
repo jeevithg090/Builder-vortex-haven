@@ -79,23 +79,23 @@ const ScrollVideoSection = () => {
     };
   }, [isScrollLocked]);
 
-  // Video card transformations - starts small, grows to fullscreen
+  // Video card transformations - starts small, grows to fullscreen with clearer 90% threshold
   const videoScale = useTransform(
     scrollYProgress,
-    [0, 0.5, 1],
-    [0.4, 0.8, 1], // Starts as 40% size, grows to full
+    [0, 0.3, 0.7, 1],
+    [0.3, 0.6, 0.9, 1], // More dramatic progression, clearly shows 90% at 0.7 progress
   );
 
   const videoWidth = useTransform(
     scrollYProgress,
     [0, 0.3, 0.7, 1],
-    ["60%", "80%", "95%", "100%"], // Card width to fullscreen
+    ["40%", "70%", "90%", "100%"], // Clear 90% threshold at 0.7 progress
   );
 
   const videoHeight = useTransform(
     scrollYProgress,
     [0, 0.3, 0.7, 1],
-    ["50vh", "70vh", "90vh", "100vh"], // Card height to fullscreen
+    ["30vh", "60vh", "90vh", "100vh"], // Clear 90% threshold at 0.7 progress
   );
 
   const videoBorderRadius = useTransform(
