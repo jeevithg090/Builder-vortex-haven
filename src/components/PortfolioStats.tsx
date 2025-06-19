@@ -1,4 +1,6 @@
-import { Download } from "lucide-react";
+import { Download, TrendingUp, Users, DollarSign } from "lucide-react";
+import { motion } from "framer-motion";
+import { useTheme } from "next-themes";
 
 interface MetricData {
   year: string;
@@ -13,47 +15,58 @@ interface PortfolioMetric {
   changePercent: string;
   changeYear: string;
   data: MetricData[];
+  isPositive: boolean;
+  icon: React.ReactNode;
 }
 
 const PortfolioStats = () => {
+  const { theme } = useTheme();
+  const isDark = theme === "dark";
+
   const metrics: PortfolioMetric[] = [
     {
-      title: "Managed portfolio carbon footprint",
-      unit: "tCO2e",
-      currentValue: "45,048",
-      changePercent: "-16%",
-      changeYear: "from 2019",
+      title: "Managed client brand value",
+      unit: "USD",
+      currentValue: "24,500,000",
+      changePercent: "45%",
+      changeYear: "from 2021",
+      isPositive: true,
+      icon: <DollarSign className="w-5 h-5" />,
       data: [
-        { year: "2022", value: 45048, percentage: 100 },
-        { year: "2021", value: 14111, percentage: 31 },
-        { year: "2020", value: 32813, percentage: 73 },
-        { year: "2019", value: 38673, percentage: 86 },
+        { year: "2024", value: 24500000, percentage: 100 },
+        { year: "2023", value: 18200000, percentage: 74 },
+        { year: "2022", value: 14800000, percentage: 60 },
+        { year: "2021", value: 16900000, percentage: 69 },
       ],
     },
     {
-      title: "Managed portfolio energy intensity",
-      unit: "kWh/m²",
-      currentValue: "123",
-      changePercent: "22%",
-      changeYear: "from 2019",
+      title: "Client portfolio growth rate",
+      unit: "%",
+      currentValue: "287",
+      changePercent: "67%",
+      changeYear: "from 2021",
+      isPositive: true,
+      icon: <TrendingUp className="w-5 h-5" />,
       data: [
-        { year: "2022", value: 123, percentage: 100 },
-        { year: "2021", value: 128, percentage: 104 },
-        { year: "2020", value: 135, percentage: 110 },
-        { year: "2019", value: 157, percentage: 128 },
+        { year: "2024", value: 287, percentage: 100 },
+        { year: "2023", value: 245, percentage: 85 },
+        { year: "2022", value: 198, percentage: 69 },
+        { year: "2021", value: 172, percentage: 60 },
       ],
     },
     {
-      title: "Managed portfolio energy consumption",
-      unit: "kWh",
-      currentValue: "47,790,662",
-      changePercent: "27%",
-      changeYear: "from 2019",
+      title: "Active client partnerships",
+      unit: "clients",
+      currentValue: "156",
+      changePercent: "34%",
+      changeYear: "from 2021",
+      isPositive: true,
+      icon: <Users className="w-5 h-5" />,
       data: [
-        { year: "2022", value: 47790662, percentage: 100 },
-        { year: "2021", value: 43324077, percentage: 91 },
-        { year: "2020", value: 48784206, percentage: 102 },
-        { year: "2019", value: 65898708, percentage: 138 },
+        { year: "2024", value: 156, percentage: 100 },
+        { year: "2023", value: 134, percentage: 86 },
+        { year: "2022", value: 108, percentage: 69 },
+        { year: "2021", value: 116, percentage: 74 },
       ],
     },
   ];
