@@ -79,7 +79,7 @@ const Index = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1, delay: 0.2 }}
                 >
-                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
                     Welcome to
                     <br />
                     <span className="text-light-purple">Happy Sellers</span>
