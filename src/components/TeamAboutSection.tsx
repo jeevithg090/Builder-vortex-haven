@@ -435,9 +435,9 @@ const TeamAboutSection = () => {
             exit={{ opacity: 0 }}
             onClick={() => setSelectedMember(null)}
           >
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+            <div className="absolute inset-0 bg-background/60 backdrop-blur-sm" />
             <motion.div
-              className="relative bg-white rounded-3xl max-w-2xl w-full p-8 shadow-2xl"
+              className="relative bg-background rounded-3xl max-w-2xl w-full p-8 shadow-2xl border border-border"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
