@@ -40,7 +40,7 @@ const ScrollVideoSection = () => {
   const videoHeight = useTransform(
     scrollYProgress,
     [0, 0.3, 0.7, 1],
-    ["50vh", "70vh", "90vh", "100vh"], // Card height grows
+    ["50vh", "70vh", "100vh", "100vh"], // Card height grows to full screen
   );
 
   const videoBorderRadius = useTransform(
