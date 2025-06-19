@@ -184,14 +184,15 @@ const StrikingBackground = () => {
         <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5" />
       </div>
 
-      {/* Cross objects */}
-      {crossObjects.map((obj) => (
-        <CrossObject
+      {/* Car objects */}
+      {carObjects.map((obj) => (
+        <CarObject
           key={obj.id}
           x={obj.x}
           y={obj.y}
           color={obj.color}
-          delay={obj.delay}
+          rotation={obj.rotation}
+          mousePos={mousePos}
         />
       ))}
 
