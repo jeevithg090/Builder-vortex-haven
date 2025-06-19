@@ -16,6 +16,9 @@ const RippleEffect = () => {
   const animationIdRef = useRef<number>();
   const mouseRef = useRef({ x: 0, y: 0 });
   const [isSupported, setIsSupported] = useState(true);
+  const [cssRipples, setCssRipples] = useState<
+    Array<{ id: number; x: number; y: number }>
+  >([]);
 
   // Vertex shader source
   const vertexShaderSource = `
@@ -60,8 +63,8 @@ const RippleEffect = () => {
 
     void main() {
       vec2 uv = v_texCoord;
-      vec3 baseColor = vec3(0.878, 0.898, 0.925); // #E0E5EC
-      vec3 finalColor = baseColor;
+      vec3 finalColor = vec3(0.0);
+      float totalAlpha = 0.0;
 
       for (int i = 0; i < 10; i++) {
         if (i >= u_rippleCount) break;
@@ -71,8 +74,8 @@ const RippleEffect = () => {
 
         if (rippleTime > 0.0) {
           float dist = distance(uv, ripplePos);
-          float rippleRadius = rippleTime * 0.3; // Adjust expansion speed
-          float rippleWidth = 0.02; // Width of the ripple edge
+          float rippleRadius = rippleTime * 0.3;
+          float rippleWidth = 0.02;
 
           // Create ripple wave
           float wave = abs(dist - rippleRadius);
@@ -84,14 +87,9 @@ const RippleEffect = () => {
             float phase = dist * 20.0 - rippleTime * 5.0;
             vec3 iridescentColor = getIridescentColor(phase);
 
-            // Subtle distortion in the interior
-            float distortionMask = smoothstep(rippleRadius - 0.05, rippleRadius, dist) *
-                                   (1.0 - smoothstep(rippleRadius, rippleRadius + 0.05, dist));
-            vec2 distortionOffset = normalize(uv - ripplePos) * sin(rippleTime * 6.28) * 0.002;
-
-            // Apply iridescent edge
-            finalColor = mix(finalColor, iridescentColor * 0.3 + baseColor,
-                           rippleIntensity * 0.6);
+            // Apply iridescent color
+            finalColor += iridescentColor * rippleIntensity * 0.3;
+            totalAlpha += rippleIntensity * 0.6;
 
             // Apply subtle background distortion
             if (dist < rippleRadius) {
@@ -102,7 +100,7 @@ const RippleEffect = () => {
         }
       }
 
-      gl_FragColor = vec4(finalColor, 1.0);
+      gl_FragColor = vec4(finalColor, min(totalAlpha, 1.0));
     }
   `;
 
@@ -199,12 +197,11 @@ const RippleEffect = () => {
       x,
       y,
       startTime: performance.now(),
-      duration: 2500 + Math.random() * 500, // 2.5-3 seconds
+      duration: 2500 + Math.random() * 500,
     };
 
     ripplesRef.current.push(newRipple);
 
-    // Limit to 10 concurrent ripples for performance
     if (ripplesRef.current.length > 10) {
       ripplesRef.current.shift();
     }
@@ -219,21 +216,20 @@ const RippleEffect = () => {
 
     const currentTime = performance.now();
 
-    // Remove expired ripples
     ripplesRef.current = ripplesRef.current.filter(
       (ripple) => currentTime - ripple.startTime < ripple.duration,
     );
 
-    // Set canvas size
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     gl.viewport(0, 0, canvas.width, canvas.height);
 
-    // Clear canvas
-    gl.clearColor(0.878, 0.898, 0.925, 1.0); // #E0E5EC
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    gl.clearColor(0.0, 0.0, 0.0, 0.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
-    // Set uniforms
     const resolutionLocation = gl.getUniformLocation(program, "u_resolution");
     const timeLocation = gl.getUniformLocation(program, "u_time");
     const ripplesLocation = gl.getUniformLocation(program, "u_ripples");
@@ -243,14 +239,13 @@ const RippleEffect = () => {
     gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
     gl.uniform1f(timeLocation, currentTime * 0.001);
 
-    // Prepare ripple data
-    const rippleData = new Float32Array(20); // 10 ripples * 2 coordinates
+    const rippleData = new Float32Array(20);
     const rippleTimeData = new Float32Array(10);
 
     ripplesRef.current.forEach((ripple, index) => {
       if (index < 10) {
         rippleData[index * 2] = ripple.x;
-        rippleData[index * 2 + 1] = canvas.height - ripple.y; // Flip Y coordinate
+        rippleData[index * 2 + 1] = canvas.height - ripple.y;
         rippleTimeData[index] =
           (currentTime - ripple.startTime) / ripple.duration;
       }
@@ -260,66 +255,59 @@ const RippleEffect = () => {
     gl.uniform1fv(rippleTimesLocation, rippleTimeData);
     gl.uniform1i(rippleCountLocation, Math.min(ripplesRef.current.length, 10));
 
-    // Draw
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
     animationIdRef.current = requestAnimationFrame(render);
   };
 
+  // WebGL effect for supported browsers
   useEffect(() => {
-    if (!isSupported) return;
+    if (isSupported) {
+      initWebGL();
 
-    initWebGL();
+      const handleMouseMove = (e: MouseEvent) => {
+        const rect = canvasRef.current?.getBoundingClientRect();
+        if (!rect) return;
 
-    const handleMouseMove = (e: MouseEvent) => {
-      const rect = canvasRef.current?.getBoundingClientRect();
-      if (!rect) return;
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
 
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+        const distance = Math.sqrt(
+          Math.pow(x - mouseRef.current.x, 2) +
+            Math.pow(y - mouseRef.current.y, 2),
+        );
 
-      // Throttle ripple creation
-      const distance = Math.sqrt(
-        Math.pow(x - mouseRef.current.x, 2) +
-          Math.pow(y - mouseRef.current.y, 2),
-      );
+        if (distance > 20) {
+          addRipple(x, y);
+          mouseRef.current = { x, y };
+        }
+      };
 
-      if (distance > 20) {
-        // Create ripple every 20 pixels of movement
-        addRipple(x, y);
-        mouseRef.current = { x, y };
-      }
-    };
+      const handleResize = () => {
+        if (canvasRef.current) {
+          canvasRef.current.width = window.innerWidth;
+          canvasRef.current.height = window.innerHeight;
+        }
+      };
 
-    const handleResize = () => {
-      if (canvasRef.current) {
-        canvasRef.current.width = window.innerWidth;
-        canvasRef.current.height = window.innerHeight;
-      }
-    };
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("resize", handleResize);
 
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("resize", handleResize);
+      render();
 
-    // Start render loop
-    render();
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("resize", handleResize);
-      if (animationIdRef.current) {
-        cancelAnimationFrame(animationIdRef.current);
-      }
-    };
+      return () => {
+        window.removeEventListener("mousemove", handleMouseMove);
+        window.removeEventListener("resize", handleResize);
+        if (animationIdRef.current) {
+          cancelAnimationFrame(animationIdRef.current);
+        }
+      };
+    }
   }, [isSupported]);
 
-  if (!isSupported) {
-    // CSS-based fallback with simple ripple animations
-    const [cssRipples, setCssRipples] = useState<
-      Array<{ id: number; x: number; y: number }>
-    >([]);
-
-    useEffect(() => {
+  // CSS fallback effect
+  useEffect(() => {
+    if (!isSupported) {
       const handleMouseMove = (e: MouseEvent) => {
         const newRipple = {
           id: Date.now() + Math.random(),
@@ -327,9 +315,8 @@ const RippleEffect = () => {
           y: e.clientY,
         };
 
-        setCssRipples((prev) => [...prev.slice(-4), newRipple]); // Keep only 5 ripples
+        setCssRipples((prev) => [...prev.slice(-4), newRipple]);
 
-        // Remove ripple after animation
         setTimeout(() => {
           setCssRipples((prev) => prev.filter((r) => r.id !== newRipple.id));
         }, 3000);
@@ -349,12 +336,14 @@ const RippleEffect = () => {
         window.removeEventListener("mousemove", throttledMouseMove);
         if (throttleTimer) clearTimeout(throttleTimer);
       };
-    }, []);
+    }
+  }, [isSupported]);
 
+  if (!isSupported) {
     return (
       <div
         className="fixed inset-0 pointer-events-none overflow-hidden"
-        style={{ backgroundColor: "#E0E5EC", zIndex: -1 }}
+        style={{ zIndex: -1 }}
       >
         {cssRipples.map((ripple) => (
           <div

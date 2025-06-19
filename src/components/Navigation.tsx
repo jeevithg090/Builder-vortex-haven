@@ -21,6 +21,11 @@ const Navigation = () => {
     { label: "Home", href: "#home" },
     { label: "Testimonials", href: "#testimonials" },
     { label: "Pricing", href: "#pricing" },
+    { label: "Video", href: "#video" },
+    { label: "Features", href: "#brandkits" },
+    { label: "Stats", href: "#stats" },
+    { label: "Vision", href: "#vision" },
+    { label: "Showcase", href: "#showcase" },
   ];
 
   return (

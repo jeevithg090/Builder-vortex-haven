@@ -79,14 +79,14 @@ const Index = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 1, delay: 0.2 }}
                 >
-                  <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6">
                     Welcome to
                     <br />
                     <span className="text-light-purple">Happy Sellers</span>
                   </h1>
 
                   <motion.p
-                    className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto"
+                    className="text-lg sm:text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto px-4"
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, delay: 0.6 }}
@@ -152,30 +152,44 @@ const Index = () => {
             </section>
 
             {/* Testimonials Section */}
-            <TestimonialsSection />
+            <section id="testimonials">
+              <TestimonialsSection />
+            </section>
 
             {/* Pricing Section */}
-            <PricingSection />
+            <section id="pricing">
+              <PricingSection />
+            </section>
 
-            {/* Scroll Video Section */}
-            <ScrollVideoSection />
+            {/* Video Section */}
+            <section id="video">
+              <ScrollVideoSection />
+            </section>
 
             {/* Brand Kits Section */}
-            <section className="py-20">
+            <section id="brandkits" className="py-20">
               <BrandKits />
             </section>
 
             {/* Portfolio Stats Section */}
-            <PortfolioStats />
+            <section id="stats">
+              <PortfolioStats />
+            </section>
 
             {/* Parallax Vision Section */}
-            <ParallaxVision />
+            <section id="vision">
+              <ParallaxVision />
+            </section>
 
             {/* Showcase Work Section */}
-            <ShowcaseWork />
+            <section id="showcase">
+              <ShowcaseWork />
+            </section>
 
-            {/* Striking Interactive Background Section */}
-            <StrikingBackground />
+            {/* Interactive Background Section */}
+            <section id="interactive">
+              <StrikingBackground />
+            </section>
 
             {/* Footer */}
             <footer className="bg-gray-900 text-white py-12">

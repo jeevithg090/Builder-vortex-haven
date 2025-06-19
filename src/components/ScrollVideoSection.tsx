@@ -24,23 +24,23 @@ const ScrollVideoSection = () => {
     setScrollProgress(latest);
   });
 
-  // Video card transformations - starts small, grows to fullscreen
+  // Simple video card pop-up animation on scroll
   const videoScale = useTransform(
     scrollYProgress,
     [0, 0.5, 1],
-    [0.4, 0.8, 1], // Starts as 40% size, grows to full
+    [0.4, 0.8, 1], // Card pops up as you scroll
   );
 
   const videoWidth = useTransform(
     scrollYProgress,
     [0, 0.3, 0.7, 1],
-    ["60%", "80%", "95%", "100%"], // Card width to fullscreen
+    ["60%", "80%", "100%", "100%"], // Card width grows to full screen
   );
 
   const videoHeight = useTransform(
     scrollYProgress,
     [0, 0.3, 0.7, 1],
-    ["50vh", "70vh", "90vh", "100vh"], // Card height to fullscreen
+    ["50vh", "70vh", "100vh", "100vh"], // Card height grows to full screen
   );
 
   const videoBorderRadius = useTransform(
@@ -268,11 +268,6 @@ const ScrollVideoSection = () => {
                 REEL
               </h2>
             </motion.div>
-
-            {/* Progress indicator */}
-            <div className="absolute bottom-4 left-4 text-white/60 text-sm font-mono">
-              {Math.round(scrollProgress * 100)}%
-            </div>
           </motion.div>
 
           {/* ABOUT US Button */}
