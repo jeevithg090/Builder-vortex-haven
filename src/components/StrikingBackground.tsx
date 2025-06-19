@@ -291,8 +291,9 @@ const StrikingBackground = () => {
             transition={{ duration: 1, delay: 1 }}
             className="text-xl md:text-2xl font-light max-w-2xl mx-auto leading-relaxed"
           >
-            Experience the future of interactive design with immersive
-            environments that respond to your every move.
+            Your vision deserves extraordinary execution. We guarantee
+            innovative solutions that exceed expectations and deliver measurable
+            results.
           </motion.p>
         </motion.div>
       </div>
