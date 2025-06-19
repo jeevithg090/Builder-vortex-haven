@@ -110,73 +110,47 @@ const TypewriterText = ({
 
 const TestimonialsSection = () => {
   const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const isInView = useInView(containerRef, { once: false, margin: "-100px" });
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [currentPhase, setCurrentPhase] = useState<
+    "intro" | "split" | "fullscreen"
+  >("intro");
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
-  // Insane split animation transforms
-  const splitProgress = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
-  const fullscreenProgress = useTransform(scrollYProgress, [0.2, 0.4], [0, 1]);
-  const testimonialProgress = useTransform(
-    scrollYProgress,
-    [0.4, 1],
-    [0, testimonials.length - 1],
-  );
+  // Simplified phases with better control
+  const progress = scrollYProgress.get();
 
-  // Split from middle animation
-  const leftSplit = useTransform(
-    splitProgress,
-    [0, 1],
-    [0, -window.innerWidth / 2],
-  );
-  const rightSplit = useTransform(
-    splitProgress,
-    [0, 1],
-    [0, window.innerWidth / 2],
-  );
-  const splitScale = useTransform(splitProgress, [0, 1], [1, 2.5]);
-  const splitRotate = useTransform(splitProgress, [0, 1], [0, 15]);
+  useEffect(() => {
+    const unsubscribe = scrollYProgress.onChange((latest) => {
+      if (latest < 0.15) {
+        setCurrentPhase("intro");
+      } else if (latest < 0.4) {
+        setCurrentPhase("split");
+      } else {
+        setCurrentPhase("fullscreen");
+        // Update testimonial index based on scroll
+        const testimonialIndex = Math.floor(
+          (latest - 0.4) / (0.6 / testimonials.length),
+        );
+        setActiveIndex(Math.min(testimonialIndex, testimonials.length - 1));
+      }
+    });
+    return () => unsubscribe();
+  }, [scrollYProgress]);
 
-  // Fullscreen expansion
-  const fullscreenScale = useTransform(fullscreenProgress, [0, 1], [0.3, 1]);
-  const fullscreenOpacity = useTransform(fullscreenProgress, [0, 1], [0, 1]);
+  // Split animation transforms (only when needed)
+  const splitProgress = useTransform(scrollYProgress, [0.15, 0.4], [0, 1]);
+  const leftSplit = useTransform(splitProgress, [0, 1], [0, -400]);
+  const rightSplit = useTransform(splitProgress, [0, 1], [0, 400]);
+  const splitScale = useTransform(splitProgress, [0, 1], [1, 1.5]);
 
-  // Testimonial cycling with insane effects
-  const currentTestimonial = useTransform(testimonialProgress, (latest) =>
-    Math.floor(latest),
-  );
-  const testimonialOffset = useTransform(
-    testimonialProgress,
-    (latest) => (latest % 1) * 100,
-  );
-
-  // Crazy particle effects
+  // Particle effects
   const particleRotation = useTransform(scrollYProgress, [0, 1], [0, 360]);
-  const particleScale = useTransform(scrollYProgress, [0, 0.5, 1], [0, 2, 0]);
-
-  // Update active testimonial
-  useEffect(() => {
-    const unsubscribe = currentTestimonial.onChange((latest) => {
-      setActiveIndex(Math.min(Math.floor(latest), testimonials.length - 1));
-    });
-    return () => unsubscribe();
-  }, [currentTestimonial]);
-
-  // Check if we're in fullscreen mode
-  useEffect(() => {
-    const unsubscribe = fullscreenProgress.onChange((latest) => {
-      setIsFullscreen(latest > 0.3);
-    });
-    return () => unsubscribe();
-  }, [fullscreenProgress]);
-
-  // Force show testimonials if scroll is minimal
-  const shouldShowFallback = scrollYProgress.get() < 0.1;
+  const particleScale = useTransform(scrollYProgress, [0, 0.5, 1], [0, 1, 0]);
 
   return (
     <section
