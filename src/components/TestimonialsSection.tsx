@@ -170,10 +170,13 @@ const TestimonialsSection = () => {
   // Check if we're in fullscreen mode
   useEffect(() => {
     const unsubscribe = fullscreenProgress.onChange((latest) => {
-      setIsFullscreen(latest > 0.5);
+      setIsFullscreen(latest > 0.3);
     });
     return () => unsubscribe();
   }, [fullscreenProgress]);
+
+  // Force show testimonials if scroll is minimal
+  const shouldShowFallback = scrollYProgress.get() < 0.1;
 
   return (
     <section
