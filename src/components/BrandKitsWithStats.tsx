@@ -385,6 +385,8 @@ const BrandKitsWithStats = () => {
 
                           {/* Settings menu with enhanced styling */}
                           <motion.button
+                            type="button"
+                            aria-label={`${kit.name} options`}
                             className="text-gray-400 hover:text-white transition-colors p-2 rounded-lg hover:bg-gray-600/50"
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}

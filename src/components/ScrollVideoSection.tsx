@@ -345,6 +345,8 @@ const ScrollVideoSection = () => {
               }}
             >
               <motion.button
+                type="button"
+                aria-label="Play showreel"
                 onClick={openVideoModal}
                 className="group relative"
                 whileHover={{ scale: 1.15 }}
