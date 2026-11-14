@@ -1,303 +1,186 @@
-# Happy Sellers - Modern Amazon Seller Platform
+# The Agency — Animated Agency Landing Page
 
-A fully responsive, feature-rich web application built with React, TypeScript, and modern web technologies. This project showcases advanced animations, interactive elements, and a sophisticated design system.
+A single-page marketing site for a fictional creative studio, "The Agency".
+It's built to show off motion design: a multi-phase intro loader, a WebGL
+ripple layer that follows the cursor, scroll-driven video and parallax
+sections, interactive galleries, and a dark/light theme. It's built with
+React, TypeScript, Vite and Tailwind CSS.
 
-Website Link: https://builder-vortex-haven.vercel.app/
+**Live site:** https://builder-vortex-haven.vercel.app/
 
-## 🚀 Features Implemented
+## Features
 
-### Mandatory Features ✅
+| Section            | What it does                                                                                                |
+| ------------------ | ----------------------------------------------------------------------------------------------------------- |
+| Intro loader       | A linear progress bar that "breaks" into an L shape and wipes away to reveal the page                       |
+| Navigation         | Sticky, blurred navbar with a mobile menu (Escape closes it) and a dark/light theme toggle                  |
+| Hero               | Gradient hero with animated blobs and calls to action                                                       |
+| Ripple background  | WebGL fragment-shader ripples that follow the cursor, with a CSS fallback when WebGL isn't there            |
+| Testimonials       | Scroll-phased testimonial layouts with ratings                                                              |
+| Client carousel    | Auto-advancing image grid with previous/next controls                                                       |
+| Pricing            | Plan cards with a highlighted "popular" tier                                                                |
+| Scroll video       | A video that grows as you scroll, with timed overlays (testimonial, stats, action panel) and a modal player |
+| Brand kits & stats | Feature cards with animated counters                                                                        |
+| Parallax vision    | Layered parallax scrolling                                                                                  |
+| Showcase           | Project carousel plus a full-gallery modal with project details                                             |
+| Team & about       | Team grid with a profile modal, company stats and values                                                    |
+| Interactive field  | A field of shapes that react to the cursor with spring physics                                              |
+| Contact            | Validated enquiry form (see [Contact form](#contact-form)), contact details and FAQ                         |
 
-1. **✅ Responsiveness** - Fully responsive design that works seamlessly across all device sizes
-2. **✅ 6+ Features** - 12 distinct features implemented (see detailed list below)
-3. **✅ Light/Dark Mode** - Complete theme switching system with smooth transitions
-4. **✅ Custom Loader** - Sophisticated animated loader with multiple animation phases
-5. **✅ Proper Navigation** - Responsive navbar with proper section linking and smooth scrolling
+Across the whole site:
 
-### Complete Feature List (12 Features)
+- Responsive layouts from 320 px phones up to wide desktops.
+- Accessibility basics: semantic landmarks, one `<h1>` per page, labelled
+  form fields with inline errors, `aria-*` state on toggles and menus, modals
+  that close with Escape, and a `prefers-reduced-motion` override.
+- An error boundary that shows a reload screen instead of a blank page, and
+  a themed 404 page.
+- A page title, meta description, Open Graph tags and an SVG favicon.
 
-1. **🎬 Interactive Loader Animation**
+## Tech stack
 
-   - Multi-phase loading animation
-   - Custom progress bar with linear progression
-   - Breaking animation effects
-   - Diagonal wipe transition
+- **React 18** + **TypeScript** (strict mode)
+- **Vite 6** for the dev server and production build
+- **React Router 7** for client-side routing
+- **Tailwind CSS 3** with CSS-variable design tokens and `tailwindcss-animate`
+- **Framer Motion** for animation and scroll-linked effects
+- **next-themes** for the theme switcher
+- **Zod** for contact-form validation
+- **lucide-react** for icons
+- **Vitest** + **Testing Library** (jsdom) for tests
+- **ESLint 9** (typescript-eslint, react-hooks, jsx-a11y) + **Prettier**
 
-2. **🌙 Responsive Navigation with Theme Toggle**
+## Architecture
 
-   - Dark/Light mode switching
-   - Mobile-responsive hamburger menu
-   - Smooth scroll navigation
-   - Backdrop blur effects
+```
+index.html ─► src/main.tsx ─► App
+                               ├─ ThemeProvider (next-themes, class strategy)
+                               ├─ ErrorBoundary
+                               └─ BrowserRouter
+                                   ├─ "/"  → pages/Index     (loader → full landing page)
+                                   └─ "*"  → pages/NotFound
+```
 
-3. **🎯 Animated Hero Section**
+- **`pages/Index.tsx`** shows the `Loader` first, then the navigation, the
+  hero and one `<section id=…>` for each content component.
+- **`lib/navigation.ts`** is the single list of section ids and labels. The
+  navbar builds its links from it, and a test checks that every link points
+  at a real section.
+- **Logic is kept out of components** in `src/lib/` (validation, mailto
+  building, loader timing, scroll-overlay zones, small hooks), where it is
+  unit-tested without rendering any UI.
+- **Styling** uses Tailwind utilities. Theme colours are HSL CSS variables in
+  `src/index.css` (`:root` and `.dark`), and brand colours (`deep-purple`,
+  `brand-purple`, `light-purple`) live in `tailwind.config.ts`.
 
-   - Gradient backgrounds with animated blobs
-   - Typewriter text effects
-   - Call-to-action buttons with hover animations
-   - Scroll indicator animation
+### Contact form
 
-4. **💬 Interactive Testimonials Section**
+The form is validated in the browser with Zod. What happens on submit depends
+on how the site is configured:
 
-   - Typewriter text animation
-   - Video thumbnail integration
-   - Responsive card layout
-   - Smooth transitions
+1. **`VITE_CONTACT_ENDPOINT` is set:** the enquiry is sent as JSON in a `POST`
+   to that URL. This works with any form backend that accepts JSON, such as
+   Formspree, Getform or your own serverless function. Network errors and
+   non-2xx responses show an error message in the form.
+2. **No endpoint set (the default):** the visitor's email app opens with a
+   pre-filled message addressed to `VITE_CONTACT_EMAIL`. No backend is needed.
 
-5. **💰 Dynamic Pricing Cards**
-
-   - Popular plan highlighting
-   - Hover animations and effects
-   - Feature comparison lists
-   - Responsive grid layout
-
-6. **🎥 Scroll-Triggered Video Section**
-
-   - Progressive card scaling on scroll
-   - Interactive video modal
-   - Smooth scroll animations
-   - Responsive video player
-
-7. **🎨 Brand Kits Feature Section**
-
-   - Feature showcase with icons
-   - Animated elements
-   - Responsive design
-   - Interactive components
-
-8. **📊 Animated Portfolio Stats**
-
-   - Number counting animations
-   - Progress indicators
-   - Statistics visualization
-   - Motion-triggered animations
-
-9. **🌊 Parallax Vision Section**
-
-   - Parallax scrolling effects
-   - Layered background animations
-   - Smooth scroll interactions
-   - Visual depth effects
-
-10. **🖼️ Showcase Work Portfolio**
-
-    - Project gallery display
-    - Hover effects and transitions
-    - Image optimization
-    - Grid layout system
-
-11. **✨ Interactive Ripple Effects**
-
-    - WebGL-powered ripple animations
-    - Mouse-following effects
-    - Iridescent color system
-    - CSS fallback for older browsers
-
-12. **🎭 Striking Interactive Background**
-    - Advanced background animations
-    - Interactive elements
-    - Smooth transitions
-    - Performance optimized
-
-## 🛠️ Technology Stack
-
-- **Frontend Framework**: React 18 with TypeScript
-- **Routing**: React Router 6 (SPA mode)
-- **Styling**: TailwindCSS 3 with custom design system
-- **Animations**: Framer Motion for advanced animations
-- **UI Components**: Radix UI primitives with custom styling
-- **Theme System**: next-themes for dark/light mode
-- **Build Tool**: Vite for fast development and building
-- **Testing**: Vitest for unit testing
-- **Package Manager**: npm
-
-## 📱 Responsive Design
-
-The application is fully responsive and tested across:
-
-- **Mobile**: 320px - 768px
-- **Tablet**: 768px - 1024px
-- **Desktop**: 1024px and above
-- **Large Screens**: 1440px and above
-
-All components use responsive design patterns:
-
-- Flexible grid systems
-- Responsive typography scaling
-- Mobile-first approach
-- Touch-friendly interactions
-
-## 🎨 Design System
-
-### Color Palette
-
-- **Primary**: Deep Purple variations (#4C1D95 to #F5F0FF)
-- **Secondary**: Light Purple (#B8C0FF)
-- **Accent**: Brand Purple (#6B46C1)
-- **Interactive**: Vibrant Pink (#FF0077)
-
-### Typography
-
-- Responsive text scaling
-- Custom font weights
-- Optimized line heights
-- Accessibility compliant contrast ratios
-
-### Animations
-
-- Smooth transitions (300ms duration)
-- Easing functions for natural motion
-- Performance optimized animations
-- Reduced motion support
-
-## 🚀 Setup Instructions
+## Getting started
 
 ### Prerequisites
 
-- Node.js 18+
-- npm 8+
+- Node.js **20.19+** (verified on Node 22)
+- npm 10+
 
-### Installation
-
-1. **Clone the repository**
-
-   ```bash
-   git clone <repository-url>
-   cd happy-sellers-platform
-   ```
-
-2. **Install dependencies**
-
-   ```bash
-   npm install
-   ```
-
-3. **Start development server**
-
-   ```bash
-   npm run dev
-   ```
-
-4. **Open in browser**
-   Navigate to `http://localhost:3000` or the port shown in terminal
-
-### Available Scripts
-
-- `npm run dev` - Start development server with HMR
-- `npm run build` - Build for production
-- `npm run test` - Run test suite
-- `npm run typecheck` - Type checking with TypeScript
-- `npm run format.fix` - Format code with Prettier
-
-### Production Build
+### Install and run
 
 ```bash
-npm run build
+git clone https://github.com/jeevithg090/Builder-vortex-haven.git
+cd Builder-vortex-haven
+npm ci
+cp .env.example .env.local   # optional, see below
+npm run dev                  # http://localhost:8080
 ```
 
-The build artifacts will be stored in the `dist/` directory.
+### Environment variables
 
-## 🧪 Testing
+All variables are optional and are baked into the bundle at build time.
+Anything prefixed `VITE_` is public, so never put secrets in them.
 
-Run the test suite:
+| Variable                | Default               | Purpose                                                              |
+| ----------------------- | --------------------- | -------------------------------------------------------------------- |
+| `VITE_CONTACT_ENDPOINT` | _(empty)_             | HTTPS URL that receives contact-form submissions as JSON             |
+| `VITE_CONTACT_EMAIL`    | `hello@theagency.com` | Address shown in the contact section and used by the mailto fallback |
+
+## Scripts
+
+| Command             | Description                                                      |
+| ------------------- | ---------------------------------------------------------------- |
+| `npm run dev`       | Start the Vite dev server with HMR on port 8080                  |
+| `npm run build`     | Build the production bundle into `dist/`                         |
+| `npm run preview`   | Serve the production build locally                               |
+| `npm run typecheck` | Type-check the app and config files (`tsc -b`)                   |
+| `npm run lint`      | Run ESLint (`npm run lint:fix` fixes what it can)                |
+| `npm run format`    | Format the codebase with Prettier (`format:check` only checks)   |
+| `npm test`          | Run the test suite once (`npm run test:watch` re-runs on change) |
+| `npm run check`     | Typecheck, lint, format check, tests and build, in that order    |
+
+## Testing
 
 ```bash
 npm test
 ```
 
-Type checking:
+Tests sit next to the code they cover (`*.spec.ts` / `*.spec.tsx`):
 
-```bash
-npm run typecheck
-```
+- **`src/lib/`**: contact validation, mailto encoding, env config and
+  submission (including network and HTTP failures); loader progress maths;
+  section/nav consistency; scroll-overlay zones and dismissal; the page-title
+  and Escape-key hooks; and the `cn` class helper.
+- **Components**: the navigation (links, mobile menu, theme toggle), the
+  contact form (inline errors, focus handling, service toggles), the error
+  boundary and the 404 page.
 
-## 🌟 Performance Optimizations
+## Deployment
 
-- **Code Splitting**: Automatic route-based code splitting
-- **Image Optimization**: Responsive images with proper sizing
-- **Animation Performance**: GPU-accelerated animations
-- **Bundle Optimization**: Tree shaking and minification
-- **Lazy Loading**: Components loaded on demand
-- **WebGL Fallbacks**: CSS animations for non-WebGL browsers
+The build output is a static site in `dist/`, so it can be hosted on any
+static host.
 
-## 🎯 Browser Support
+- **Vercel**: import the repo. It detects Vite on its own (build command
+  `npm run build`, output folder `dist`). `vercel.json` rewrites every path to
+  `index.html` so client-side routes such as the 404 page work on a reload.
+- **Netlify / Cloudflare Pages / others**: use the same build command and
+  output folder, and add an SPA fallback rule (for example `/* /index.html 200`
+  in Netlify's `_redirects`).
 
-- **Modern Browsers**: Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
-- **Mobile Browsers**: iOS Safari 14+, Chrome Mobile 90+
-- **Graceful Degradation**: CSS fallbacks for older browsers
-- **Progressive Enhancement**: Core functionality works without JavaScript
+Set any `VITE_*` variables in the host's dashboard **before** building.
 
-## 🔧 AI Tools Used
-
-This project was developed with assistance from the following AI tools:
-
-- **Claude (Anthropic)** - Primary development assistant for code generation, debugging, and optimization
-- **GitHub Copilot** - Code completion and suggestions
-- **Claude Artifacts** - Component design and implementation
-- **Builder.io- For Code Generation
-- **Gemini AI- Classification of UI Components
-
-## 📊 Evaluation Criteria Met
-
-### Design Accuracy (40%) ✅
-
-- Pixel-perfect implementation
-- Consistent design system
-- Professional UI/UX
-- Attention to visual details
-
-### Responsiveness (25%) ✅
-
-- Mobile-first approach
-- Flexible layouts
-- Touch-friendly interactions
-- Cross-device compatibility
-
-### Innovation/Enhancements (20%) ✅
-
-- Advanced animations and interactions
-- WebGL-powered effects
-- Sophisticated loader animation
-- Interactive background effects
-- Smooth scroll experiences
-
-### Code Quality & Best Practices (15%) ✅
-
-- TypeScript for type safety
-- Component-based architecture
-- Consistent code style
-- Performance optimizations
-- Accessibility considerations
-- Clean, maintainable code structure
-
-## 📝 Project Structure
+## Project structure
 
 ```
-src/
-├── components/          # Reusable UI components
-│   ├── ui/             # Base UI components (Radix)
-│   ├── Loader.tsx      # Custom animated loader
-│   ├── Navigation.tsx  # Responsive navigation
-│   ├── RippleEffect.tsx # WebGL ripple effects
-│   └── ...             # Other feature components
-├── pages/              # Route components
-├── hooks/              # Custom React hooks
-├── lib/                # Utility functions
-└── App.tsx            # Main application component
+.
+├── index.html               # HTML shell, metadata, favicon
+├── public/                  # Static assets served as-is (favicon, robots.txt)
+├── src/
+│   ├── main.tsx             # Entry point
+│   ├── App.tsx              # Providers, error boundary and routes
+│   ├── index.css            # Tailwind layers, theme variables, global styles
+│   ├── pages/
+│   │   ├── Index.tsx        # Landing page (loader, hero, all sections)
+│   │   └── NotFound.tsx     # 404 page
+│   ├── components/          # One file per page section, plus Loader, Navigation, ErrorBoundary
+│   ├── lib/                 # Framework-free logic and small hooks, each with a .spec file
+│   └── test/setup.ts        # Vitest/jsdom setup (jest-dom, browser API mocks)
+├── eslint.config.js
+├── tailwind.config.ts
+├── vite.config.ts           # Vite + Vitest config
+├── vercel.json              # SPA rewrite for Vercel
+└── .env.example
 ```
 
-## 🎉 Deployment
+## Credits
 
-The application is optimized for deployment on:
-
-- Vercel (recommended)
-- Netlify
-- GitHub Pages
-- Any static hosting service
-
-Build command: `npm run build`
-Output directory: `dist/`
-
----
-
-**Built with ❤️ using modern web technologies and AI assistance**
+The photos come from [Pexels](https://www.pexels.com/) and are loaded from
+their CDN. The sample video is _Big Buck Bunny_ (© Blender Foundation, CC BY
+3.0), loaded from Google's public sample bucket. Company names, people,
+testimonials and figures on the site are placeholder content.
