@@ -1,21 +1,77 @@
-import { useCallback, useState, type ComponentType } from "react";
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useState,
+  type ComponentType,
+} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Loader from "@/components/Loader";
 import Navigation from "@/components/Navigation";
-import TestimonialsSection from "@/components/TestimonialsSection";
-import PricingSection from "@/components/PricingSection";
-import RippleEffect from "@/components/RippleEffect";
-import ScrollVideoSection from "@/components/ScrollVideoSection";
-import BrandKitsWithStats from "@/components/BrandKitsWithStats";
-import ParallaxVision from "@/components/ParallaxVision";
-import ShowcaseWork from "@/components/ShowcaseWork";
-import StrikingBackground from "@/components/StrikingBackground";
-import TeamAboutSection from "@/components/TeamAboutSection";
-import ContactSection from "@/components/ContactSection";
-import EnhancedFooter from "@/components/EnhancedFooter";
-import ClientCarousel from "@/components/ClientCarousel";
+import { lazyWithPreload } from "@/lib/lazyWithPreload";
 import type { SectionId } from "@/lib/navigation";
 import { usePageTitle } from "@/lib/usePageTitle";
+
+// Everything below the hero is split into its own chunks and fetched while
+// the intro loader plays, keeping the initial bundle small.
+const RippleEffect = lazyWithPreload(() => import("@/components/RippleEffect"));
+const TestimonialsSection = lazyWithPreload(
+  () => import("@/components/TestimonialsSection"),
+);
+const ClientCarousel = lazyWithPreload(
+  () => import("@/components/ClientCarousel"),
+);
+const PricingSection = lazyWithPreload(
+  () => import("@/components/PricingSection"),
+);
+const ScrollVideoSection = lazyWithPreload(
+  () => import("@/components/ScrollVideoSection"),
+);
+const BrandKitsWithStats = lazyWithPreload(
+  () => import("@/components/BrandKitsWithStats"),
+);
+const ParallaxVision = lazyWithPreload(
+  () => import("@/components/ParallaxVision"),
+);
+const ShowcaseWork = lazyWithPreload(() => import("@/components/ShowcaseWork"));
+const TeamAboutSection = lazyWithPreload(
+  () => import("@/components/TeamAboutSection"),
+);
+const StrikingBackground = lazyWithPreload(
+  () => import("@/components/StrikingBackground"),
+);
+const ContactSection = lazyWithPreload(
+  () => import("@/components/ContactSection"),
+);
+const EnhancedFooter = lazyWithPreload(
+  () => import("@/components/EnhancedFooter"),
+);
+
+const LAZY_PARTS = [
+  RippleEffect,
+  TestimonialsSection,
+  ClientCarousel,
+  PricingSection,
+  ScrollVideoSection,
+  BrandKitsWithStats,
+  ParallaxVision,
+  ShowcaseWork,
+  TeamAboutSection,
+  StrikingBackground,
+  ContactSection,
+  EnhancedFooter,
+];
+
+/** Placeholder shown if a section's chunk is still downloading. */
+const SectionFallback = () => (
+  <div
+    role="status"
+    aria-label="Loading section"
+    className="flex min-h-[50vh] items-center justify-center bg-background"
+  >
+    <div className="h-10 w-10 animate-spin rounded-full border-4 border-muted border-t-brand-purple" />
+  </div>
+);
 
 /** Content sections rendered after the hero, in page order. */
 const CONTENT_SECTIONS: ReadonlyArray<{
@@ -42,6 +98,11 @@ const Index = () => {
     setLoading(false);
   }, []);
 
+  useEffect(() => {
+    // Failed preloads are retried (and surfaced) when the section renders.
+    LAZY_PARTS.forEach((part) => part.preload().catch(() => undefined));
+  }, []);
+
   return (
     <>
       <AnimatePresence mode="wait">
@@ -51,17 +112,26 @@ const Index = () => {
       {!loading && (
         <>
           {/* Ripple Effect Background */}
-          <RippleEffect />
+          <Suspense fallback={null}>
+            <RippleEffect />
+          </Suspense>
 
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-background focus:px-4 focus:py-2 focus:text-foreground focus:shadow-lg"
+            >
+              Skip to content
+            </a>
+
             {/* Navigation */}
             <Navigation />
 
-            <main id="main-content">
+            <main id="main-content" tabIndex={-1} className="outline-none">
               {/* Hero Section */}
               <section
                 id="home"
@@ -178,13 +248,17 @@ const Index = () => {
 
               {CONTENT_SECTIONS.map(({ id, Component }) => (
                 <section key={id} id={id} className="scroll-mt-16">
-                  <Component />
+                  <Suspense fallback={<SectionFallback />}>
+                    <Component />
+                  </Suspense>
                 </section>
               ))}
             </main>
 
             {/* Enhanced Footer */}
-            <EnhancedFooter />
+            <Suspense fallback={null}>
+              <EnhancedFooter />
+            </Suspense>
           </motion.div>
         </>
       )}
