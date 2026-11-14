@@ -1,3 +1,4 @@
+import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 import {
   Mail,
@@ -14,6 +15,13 @@ import {
   Clock,
   Heart,
 } from "lucide-react";
+import { getContactConfig } from "@/lib/contact";
+import {
+  getNewsletterConfig,
+  subscribeToNewsletter,
+  validateNewsletterEmail,
+} from "@/lib/newsletter";
+import { cn } from "@/lib/utils";
 
 interface FooterLinkItem {
   label: string;
@@ -33,8 +41,57 @@ const FooterLink = ({ item }: { item: FooterLinkItem }) =>
     <span className="text-gray-300 block">{item.label}</span>
   );
 
+type NewsletterState =
+  | { kind: "idle" }
+  | { kind: "submitting" }
+  | { kind: "error"; message: string }
+  | { kind: "done"; href?: string };
+
+const newsletterConfig = getNewsletterConfig(
+  import.meta.env,
+  getContactConfig().email,
+);
+
 const EnhancedFooter = () => {
   const currentYear = new Date().getFullYear();
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+  const [newsletter, setNewsletter] = useState<NewsletterState>({
+    kind: "idle",
+  });
+
+  const handleSubscribe = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (newsletter.kind === "submitting") return;
+
+    const validation = validateNewsletterEmail(newsletterEmail);
+    if (!validation.success) {
+      setNewsletter({ kind: "error", message: validation.error });
+      document.getElementById("newsletter-email")?.focus();
+      return;
+    }
+
+    setNewsletter({ kind: "submitting" });
+    try {
+      const result = await subscribeToNewsletter(
+        validation.email,
+        newsletterConfig,
+      );
+      if (result.status === "mailto") {
+        window.location.href = result.href;
+        setNewsletter({ kind: "done", href: result.href });
+      } else {
+        setNewsletter({ kind: "done" });
+      }
+    } catch (error) {
+      setNewsletter({
+        kind: "error",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Something went wrong. Please try again.",
+      });
+    }
+  };
   const services: FooterLinkItem[] = [
     { label: "Brand Identity Design", href: "#contact" },
     { label: "Web Development", href: "#contact" },
@@ -156,27 +213,94 @@ const EnhancedFooter = () => {
                 </p>
               </div>
               <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20">
-                <form className="space-y-4">
-                  <div className="flex flex-col sm:flex-row gap-4">
-                    <input
-                      type="email"
-                      placeholder="Enter your email"
-                      className="flex-1 px-4 py-3 bg-white/20 border border-white/30 rounded-xl text-white placeholder-gray-300 focus:outline-none focus:border-purple-400 focus:bg-white/25 transition-all"
-                    />
-                    <motion.button
-                      type="submit"
-                      className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-purple-500/25 transition-all flex items-center gap-2 justify-center"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      Subscribe
-                      <ArrowRight className="w-4 h-4" />
-                    </motion.button>
+                {newsletter.kind === "done" ? (
+                  <div role="status" className="text-center sm:text-left">
+                    <p className="text-lg font-semibold text-white">
+                      {newsletter.href
+                        ? "Almost done — check your email app"
+                        : "You're on the list!"}
+                    </p>
+                    <p className="mt-2 text-sm text-gray-300">
+                      {newsletter.href ? (
+                        <>
+                          Send the pre-filled email to finish subscribing, or{" "}
+                          <a
+                            href={newsletter.href}
+                            className="text-purple-300 underline hover:text-purple-200"
+                          >
+                            open it here
+                          </a>
+                          .
+                        </>
+                      ) : (
+                        "Thanks for subscribing. Look out for our next issue."
+                      )}
+                    </p>
                   </div>
-                  <p className="text-sm text-gray-400">
-                    We respect your privacy. Unsubscribe at any time.
-                  </p>
-                </form>
+                ) : (
+                  <form
+                    className="space-y-4"
+                    onSubmit={handleSubscribe}
+                    noValidate
+                    aria-busy={newsletter.kind === "submitting"}
+                  >
+                    <label htmlFor="newsletter-email" className="sr-only">
+                      Email address
+                    </label>
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <input
+                        id="newsletter-email"
+                        type="email"
+                        autoComplete="email"
+                        placeholder="Enter your email"
+                        value={newsletterEmail}
+                        onChange={(e) => {
+                          setNewsletterEmail(e.target.value);
+                          if (newsletter.kind === "error") {
+                            setNewsletter({ kind: "idle" });
+                          }
+                        }}
+                        aria-invalid={newsletter.kind === "error"}
+                        aria-describedby={
+                          newsletter.kind === "error"
+                            ? "newsletter-error"
+                            : "newsletter-hint"
+                        }
+                        className={cn(
+                          "flex-1 px-4 py-3 bg-white/20 border rounded-xl text-white placeholder-gray-300 focus:outline-none focus:border-purple-400 focus:bg-white/25 transition-all",
+                          newsletter.kind === "error"
+                            ? "border-red-400"
+                            : "border-white/30",
+                        )}
+                      />
+                      <motion.button
+                        type="submit"
+                        disabled={newsletter.kind === "submitting"}
+                        className="px-8 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold rounded-xl hover:shadow-lg hover:shadow-purple-500/25 transition-all flex items-center gap-2 justify-center disabled:opacity-60"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        {newsletter.kind === "submitting"
+                          ? "Subscribing..."
+                          : "Subscribe"}
+                        <ArrowRight className="w-4 h-4" aria-hidden="true" />
+                      </motion.button>
+                    </div>
+                    {newsletter.kind === "error" ? (
+                      <p
+                        id="newsletter-error"
+                        role="alert"
+                        className="text-sm text-red-300"
+                      >
+                        {newsletter.message}
+                      </p>
+                    ) : (
+                      <p id="newsletter-hint" className="text-sm text-gray-400">
+                        We respect your privacy. Unsubscribe at any time.
+                      </p>
+                    )}
+                  </form>
+                )}
               </div>
             </div>
           </div>
