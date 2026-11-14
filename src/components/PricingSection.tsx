@@ -61,7 +61,6 @@ const PricingSection = () => {
 
   return (
     <section
-      id="pricing"
       className="py-20 bg-white/90 dark:bg-gray-900/90 backdrop-blur-sm transition-colors duration-300"
       ref={ref}
     >

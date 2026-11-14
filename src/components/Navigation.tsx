@@ -1,166 +1,152 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Moon, Sun, Menu, X } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
 import { useTheme } from "next-themes";
+import { cn } from "@/lib/utils";
+import { getNavItems } from "@/lib/navigation";
+import { SITE_NAME } from "@/lib/usePageTitle";
+
+const NAV_ITEMS = getNavItems();
+const MOBILE_MENU_ID = "mobile-navigation";
 
 const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener("scroll", handleScroll);
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navItems = [
-    { label: "Home", href: "#home" },
-    { label: "Testimonials", href: "#testimonials" },
-    { label: "Pricing", href: "#pricing" },
-    { label: "Video", href: "#video" },
-    { label: "Features", href: "#brandkits" },
-    { label: "Stats", href: "#stats" },
-    { label: "Vision", href: "#vision" },
-    { label: "Showcase", href: "#showcase" },
-  ];
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsMobileMenuOpen(false);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isMobileMenuOpen]);
+
+  const linkClass = isScrolled
+    ? "text-foreground hover:text-purple-600"
+    : "text-white hover:text-light-purple";
+  const iconButtonClass = cn(
+    "p-2 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-light-purple",
+    isScrolled ? "bg-muted hover:bg-muted/80" : "bg-white/10 hover:bg-white/20",
+  );
+  const iconClass = cn(
+    "w-5 h-5",
+    isScrolled ? "text-foreground" : "text-white",
+  );
 
   return (
     <motion.nav
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+      aria-label="Main"
+      className={cn(
+        "fixed top-0 left-0 right-0 z-40 transition-all duration-300",
         isScrolled
           ? "bg-background/90 backdrop-blur-lg shadow-lg border-b border-border"
-          : "bg-transparent"
-      }`}
+          : "bg-transparent",
+      )}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <motion.div
-            className="flex-shrink-0"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          <a
+            href="#home"
+            className={cn("text-xl font-bold transition-colors", linkClass)}
           >
-            <a
-              href="#home"
-              className={`text-xl font-bold transition-colors ${
-                isScrolled
-                  ? "text-foreground hover:text-purple-600"
-                  : "text-white hover:text-light-purple"
-              }`}
-            >
-              The Agency
-            </a>
-          </motion.div>
+            {SITE_NAME}
+          </a>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:block">
-            <div className="flex items-center space-x-8">
-              {navItems.map((item) => (
-                <motion.a
-                  key={item.label}
+          {/* Desktop navigation */}
+          <ul className="hidden lg:flex items-center gap-2 xl:gap-4">
+            {NAV_ITEMS.map((item) => (
+              <li key={item.href}>
+                <a
                   href={item.href}
-                  className={`transition-colors px-3 py-2 rounded-md text-sm font-medium ${
-                    isScrolled
-                      ? "text-foreground hover:text-purple-600"
-                      : "text-white hover:text-light-purple"
-                  }`}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  className={cn(
+                    "transition-colors px-3 py-2 rounded-md text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-light-purple",
+                    linkClass,
+                  )}
                 >
                   {item.label}
-                </motion.a>
-              ))}
-            </div>
-          </div>
+                </a>
+              </li>
+            ))}
+          </ul>
 
-          {/* Theme Toggle and Mobile Menu */}
-          <div className="flex items-center space-x-4">
-            {/* Theme Toggle */}
-            <motion.button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className={`p-2 rounded-lg transition-colors ${
-                isScrolled
-                  ? "bg-muted hover:bg-muted/80"
-                  : "bg-white/10 hover:bg-white/20"
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setTheme(isDark ? "light" : "dark")}
+              className={iconButtonClass}
+              aria-label={
+                isDark ? "Switch to light mode" : "Switch to dark mode"
+              }
             >
-              {theme === "dark" ? (
-                <Sun
-                  className={`w-5 h-5 ${isScrolled ? "text-foreground" : "text-white"}`}
-                />
+              {isDark ? (
+                <Sun className={iconClass} aria-hidden="true" />
               ) : (
-                <Moon
-                  className={`w-5 h-5 ${isScrolled ? "text-foreground" : "text-white"}`}
-                />
+                <Moon className={iconClass} aria-hidden="true" />
               )}
-            </motion.button>
+            </button>
 
-            {/* Mobile Menu Button */}
-            <motion.button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`md:hidden p-2 rounded-lg transition-colors ${
-                isScrolled
-                  ? "bg-muted hover:bg-muted/80"
-                  : "bg-white/10 hover:bg-white/20"
-              }`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+            <button
+              type="button"
+              onClick={() => setIsMobileMenuOpen((open) => !open)}
+              className={cn("lg:hidden", iconButtonClass)}
+              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls={MOBILE_MENU_ID}
             >
               {isMobileMenuOpen ? (
-                <X
-                  className={`w-5 h-5 ${isScrolled ? "text-foreground" : "text-white"}`}
-                />
+                <X className={iconClass} aria-hidden="true" />
               ) : (
-                <Menu
-                  className={`w-5 h-5 ${isScrolled ? "text-foreground" : "text-white"}`}
-                />
+                <Menu className={iconClass} aria-hidden="true" />
               )}
-            </motion.button>
+            </button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
-        <motion.div
-          className={`md:hidden ${isMobileMenuOpen ? "block" : "hidden"}`}
-          initial={{ opacity: 0, height: 0 }}
-          animate={{
-            opacity: isMobileMenuOpen ? 1 : 0,
-            height: isMobileMenuOpen ? "auto" : 0,
-          }}
-          transition={{ duration: 0.3 }}
-        >
-          <div
-            className={`px-2 pt-2 pb-3 space-y-1 backdrop-blur-lg rounded-lg mt-2 ${
+        {/* Mobile navigation */}
+        {isMobileMenuOpen && (
+          <motion.ul
+            id={MOBILE_MENU_ID}
+            className={cn(
+              "lg:hidden px-2 pt-2 pb-3 space-y-1 backdrop-blur-lg rounded-lg mt-2",
               isScrolled
                 ? "bg-background/95 border border-border"
-                : "bg-white/10"
-            }`}
+                : "bg-deep-purple-900/90",
+            )}
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
           >
-            {navItems.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                  isScrolled
-                    ? "text-foreground hover:text-purple-600 hover:bg-muted/50"
-                    : "text-white hover:text-light-purple hover:bg-white/10"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {item.label}
-              </a>
+            {NAV_ITEMS.map((item) => (
+              <li key={item.href}>
+                <a
+                  href={item.href}
+                  className={cn(
+                    "block px-3 py-2 rounded-md text-base font-medium transition-colors",
+                    isScrolled
+                      ? "text-foreground hover:text-purple-600 hover:bg-muted/50"
+                      : "text-white hover:text-light-purple hover:bg-white/10",
+                  )}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {item.label}
+                </a>
+              </li>
             ))}
-          </div>
-        </motion.div>
+          </motion.ul>
+        )}
       </div>
     </motion.nav>
   );
