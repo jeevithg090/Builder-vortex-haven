@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useEscapeKey } from "@/lib/useEscapeKey";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Award,
@@ -27,6 +28,25 @@ interface TeamMember {
   };
 }
 
+type SocialPlatform = keyof TeamMember["socials"];
+
+const SOCIAL_LABELS: Record<SocialPlatform, string> = {
+  linkedin: "LinkedIn",
+  twitter: "Twitter",
+  instagram: "Instagram",
+  email: "Email",
+};
+
+/** Turns a member's socials into real links, dropping empty placeholders. */
+const getSocialLinks = (socials: TeamMember["socials"]) =>
+  (Object.entries(socials) as [SocialPlatform, string | undefined][])
+    .filter(([, value]) => Boolean(value) && value !== "#")
+    .map(([platform, value]) => ({
+      platform,
+      href: platform === "email" ? `mailto:${value}` : (value as string),
+      label: SOCIAL_LABELS[platform],
+    }));
+
 interface Stat {
   icon: React.ReactNode;
   value: string;
@@ -37,6 +57,7 @@ interface Stat {
 const TeamAboutSection = () => {
   const [activeTab, setActiveTab] = useState<"about" | "team">("about");
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  useEscapeKey(selectedMember !== null, () => setSelectedMember(null));
 
   const stats: Stat[] = [
     {
@@ -158,13 +179,13 @@ const TeamAboutSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
             Meet The
             <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               {" "}
               Visionaries
             </span>
-          </h1>
+          </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             We're a diverse team of creators, strategists, and innovators
             passionate about bringing extraordinary brand experiences to life.
@@ -429,6 +450,9 @@ const TeamAboutSection = () => {
       <AnimatePresence>
         {selectedMember && (
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label={selectedMember.name}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -462,23 +486,30 @@ const TeamAboutSection = () => {
                     {selectedMember.bio}
                   </p>
                   <div className="flex gap-4">
-                    {Object.entries(selectedMember.socials).map(
-                      ([platform, url]) => (
-                        <button
+                    {getSocialLinks(selectedMember.socials).map(
+                      ({ platform, href, label }) => (
+                        <a
                           key={platform}
+                          href={href}
+                          aria-label={label}
+                          {...(platform === "email"
+                            ? {}
+                            : { target: "_blank", rel: "noopener noreferrer" })}
                           className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-white hover:shadow-lg transition-shadow"
                         >
                           {platform === "linkedin" && (
-                            <Linkedin className="w-5 h-5" />
+                            <Linkedin className="w-5 h-5" aria-hidden="true" />
                           )}
                           {platform === "twitter" && (
-                            <Twitter className="w-5 h-5" />
+                            <Twitter className="w-5 h-5" aria-hidden="true" />
                           )}
                           {platform === "instagram" && (
-                            <Instagram className="w-5 h-5" />
+                            <Instagram className="w-5 h-5" aria-hidden="true" />
                           )}
-                          {platform === "email" && <Mail className="w-5 h-5" />}
-                        </button>
+                          {platform === "email" && (
+                            <Mail className="w-5 h-5" aria-hidden="true" />
+                          )}
+                        </a>
                       ),
                     )}
                   </div>

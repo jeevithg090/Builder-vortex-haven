@@ -1,11 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Plus } from "lucide-react";
 
 const ParallaxVision = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [scrollY, setScrollY] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -22,30 +20,6 @@ const ParallaxVision = () => {
     [1, 1, 0.5, 0],
   );
   const textScale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      { threshold: 0.1 },
-    );
-
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      observer.disconnect();
-    };
-  }, []);
 
   // Thumbnail images for the bottom reel
   const thumbnails = Array.from({ length: 8 }, (_, i) => (
@@ -120,14 +94,14 @@ const ParallaxVision = () => {
             >
               Connection
             </motion.p>
-            <motion.h1
+            <motion.h2
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-5xl md:text-6xl lg:text-7xl font-bold leading-tight"
             >
               Share quality time. <span className="block">And space.</span>
-            </motion.h1>
+            </motion.h2>
           </div>
         </motion.div>
 

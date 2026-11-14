@@ -154,15 +154,15 @@ const RippleEffect = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const gl =
-      canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+    const gl = (canvas.getContext("webgl") ||
+      canvas.getContext("experimental-webgl")) as WebGLRenderingContext | null;
     if (!gl) {
       setIsSupported(false);
       return;
     }
 
-    glRef.current = gl as WebGLRenderingContext;
-    const program = createProgram(gl as WebGLRenderingContext);
+    glRef.current = gl;
+    const program = createProgram(gl);
     if (!program) {
       setIsSupported(false);
       return;
@@ -220,8 +220,15 @@ const RippleEffect = () => {
       (ripple) => currentTime - ripple.startTime < ripple.duration,
     );
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    // Resizing a canvas reallocates its drawing buffer, so only do it when
+    // the viewport actually changed rather than on every frame.
+    if (
+      canvas.width !== window.innerWidth ||
+      canvas.height !== window.innerHeight
+    ) {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
     gl.viewport(0, 0, canvas.width, canvas.height);
 
     gl.enable(gl.BLEND);
@@ -303,6 +310,9 @@ const RippleEffect = () => {
         }
       };
     }
+    // initWebGL/render/addRipple only touch refs, so re-running this effect
+    // when they are recreated on re-render would just restart the loop.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSupported]);
 
   // CSS fallback effect

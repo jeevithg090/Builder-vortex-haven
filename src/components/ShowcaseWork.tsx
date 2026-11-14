@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useEscapeKey } from "@/lib/useEscapeKey";
 import {
   motion,
   useScroll,
@@ -35,6 +36,11 @@ const ShowcaseWork = () => {
   const [currentProject, setCurrentProject] = useState(0);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [showAllProjects, setShowAllProjects] = useState(false);
+  useEscapeKey(selectedProject !== null || showAllProjects, () => {
+    // Close the top-most modal first.
+    if (selectedProject) setSelectedProject(null);
+    else setShowAllProjects(false);
+  });
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -362,6 +368,9 @@ const ShowcaseWork = () => {
       <AnimatePresence>
         {selectedProject && (
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label={selectedProject.title}
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -384,6 +393,7 @@ const ShowcaseWork = () => {
                   className="w-full h-64 object-cover rounded-t-3xl"
                 />
                 <button
+                  aria-label="Close"
                   onClick={() => setSelectedProject(null)}
                   className="absolute top-4 right-4 w-10 h-10 bg-background/50 rounded-full flex items-center justify-center text-foreground hover:bg-background/70 transition-colors backdrop-blur-sm border border-border"
                 >
@@ -509,6 +519,9 @@ const ShowcaseWork = () => {
       <AnimatePresence>
         {showAllProjects && (
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label="All projects"
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -529,6 +542,7 @@ const ShowcaseWork = () => {
                     All Projects
                   </h2>
                   <button
+                    aria-label="Close"
                     onClick={() => setShowAllProjects(false)}
                     className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors"
                   >

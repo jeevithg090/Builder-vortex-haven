@@ -15,41 +15,60 @@ import {
   Heart,
 } from "lucide-react";
 
+interface FooterLinkItem {
+  label: string;
+  /** In-page anchor; items without one are rendered as plain text. */
+  href?: string;
+}
+
+const FOOTER_LINK_CLASS =
+  "text-gray-300 hover:text-purple-400 transition-colors hover:translate-x-1 transform duration-200 block";
+
+const FooterLink = ({ item }: { item: FooterLinkItem }) =>
+  item.href ? (
+    <a href={item.href} className={FOOTER_LINK_CLASS}>
+      {item.label}
+    </a>
+  ) : (
+    <span className="text-gray-300 block">{item.label}</span>
+  );
+
 const EnhancedFooter = () => {
-  const services = [
-    "Brand Identity Design",
-    "Web Development",
-    "Digital Marketing",
-    "Content Strategy",
-    "UI/UX Design",
-    "E-commerce Solutions",
+  const currentYear = new Date().getFullYear();
+  const services: FooterLinkItem[] = [
+    { label: "Brand Identity Design", href: "#contact" },
+    { label: "Web Development", href: "#contact" },
+    { label: "Digital Marketing", href: "#contact" },
+    { label: "Content Strategy", href: "#contact" },
+    { label: "UI/UX Design", href: "#contact" },
+    { label: "E-commerce Solutions", href: "#contact" },
   ];
 
-  const company = [
-    "About Us",
-    "Our Team",
-    "Careers",
-    "Press Kit",
-    "Case Studies",
-    "Blog",
+  const company: FooterLinkItem[] = [
+    { label: "About Us", href: "#team-about" },
+    { label: "Our Team", href: "#team-about" },
+    { label: "Case Studies", href: "#showcase" },
+    { label: "Pricing", href: "#pricing" },
+    { label: "Testimonials", href: "#testimonials" },
+    { label: "Contact", href: "#contact" },
   ];
 
-  const resources = [
-    "Design Resources",
-    "Brand Guidelines",
-    "Industry Reports",
-    "Webinars",
-    "Tools & Templates",
-    "Help Center",
+  const resources: FooterLinkItem[] = [
+    { label: "Design Resources" },
+    { label: "Brand Guidelines" },
+    { label: "Industry Reports" },
+    { label: "Webinars" },
+    { label: "Tools & Templates" },
+    { label: "Help Center" },
   ];
 
-  const legal = [
-    "Privacy Policy",
-    "Terms of Service",
-    "Cookie Policy",
-    "GDPR Compliance",
-    "Accessibility",
-    "Site Map",
+  const legal: FooterLinkItem[] = [
+    { label: "Privacy Policy" },
+    { label: "Terms of Service" },
+    { label: "Cookie Policy" },
+    { label: "GDPR Compliance" },
+    { label: "Accessibility" },
+    { label: "Site Map" },
   ];
 
   const socialLinks = [
@@ -231,14 +250,9 @@ const EnhancedFooter = () => {
                   Services
                 </h4>
                 <ul className="space-y-3">
-                  {services.map((service, index) => (
-                    <li key={index}>
-                      <a
-                        href="#"
-                        className="text-gray-300 hover:text-purple-400 transition-colors hover:translate-x-1 transform duration-200 block"
-                      >
-                        {service}
-                      </a>
+                  {services.map((item) => (
+                    <li key={item.label}>
+                      <FooterLink item={item} />
                     </li>
                   ))}
                 </ul>
@@ -255,14 +269,9 @@ const EnhancedFooter = () => {
                   Company
                 </h4>
                 <ul className="space-y-3">
-                  {company.map((item, index) => (
-                    <li key={index}>
-                      <a
-                        href="#"
-                        className="text-gray-300 hover:text-purple-400 transition-colors hover:translate-x-1 transform duration-200 block"
-                      >
-                        {item}
-                      </a>
+                  {company.map((item) => (
+                    <li key={item.label}>
+                      <FooterLink item={item} />
                     </li>
                   ))}
                 </ul>
@@ -279,14 +288,9 @@ const EnhancedFooter = () => {
                   Resources
                 </h4>
                 <ul className="space-y-3">
-                  {resources.map((resource, index) => (
-                    <li key={index}>
-                      <a
-                        href="#"
-                        className="text-gray-300 hover:text-purple-400 transition-colors hover:translate-x-1 transform duration-200 block"
-                      >
-                        {resource}
-                      </a>
+                  {resources.map((item) => (
+                    <li key={item.label}>
+                      <FooterLink item={item} />
                     </li>
                   ))}
                 </ul>
@@ -301,14 +305,9 @@ const EnhancedFooter = () => {
               >
                 <h4 className="text-white font-semibold text-lg mb-6">Legal</h4>
                 <ul className="space-y-3">
-                  {legal.map((item, index) => (
-                    <li key={index}>
-                      <a
-                        href="#"
-                        className="text-gray-300 hover:text-purple-400 transition-colors hover:translate-x-1 transform duration-200 block"
-                      >
-                        {item}
-                      </a>
+                  {legal.map((item) => (
+                    <li key={item.label}>
+                      <FooterLink item={item} />
                     </li>
                   ))}
                 </ul>
@@ -365,7 +364,7 @@ const EnhancedFooter = () => {
           <div className="max-w-7xl mx-auto px-4">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <div className="flex items-center gap-2 text-gray-400">
-                <span>© 2024 The Agency. All rights reserved.</span>
+                <span>© {currentYear} The Agency. All rights reserved.</span>
                 <span className="hidden md:inline">•</span>
                 <span className="flex items-center gap-1">
                   Made with <Heart className="w-4 h-4 text-red-400" /> in San
@@ -373,14 +372,11 @@ const EnhancedFooter = () => {
                 </span>
               </div>
               <div className="flex items-center gap-6 text-sm text-gray-400">
-                <a href="#" className="hover:text-purple-400 transition-colors">
-                  Privacy
-                </a>
-                <a href="#" className="hover:text-purple-400 transition-colors">
-                  Terms
-                </a>
-                <a href="#" className="hover:text-purple-400 transition-colors">
-                  Cookies
+                <a
+                  href="#home"
+                  className="hover:text-purple-400 transition-colors"
+                >
+                  Back to top
                 </a>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 bg-green-400 rounded-full"></div>
