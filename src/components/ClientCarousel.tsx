@@ -267,7 +267,10 @@ const ClientCarousel = () => {
           <div className="flex justify-center gap-3 mt-8">
             {clientImages.map((_, index) => (
               <motion.button
+                type="button"
                 key={index}
+                aria-label={`Show slide ${index + 1}`}
+                aria-current={index === currentIndex}
                 onClick={() => setCurrentIndex(index)}
                 className={`w-3 h-3 rounded-full transition-all duration-300 ${
                   index === currentIndex

@@ -142,7 +142,7 @@ const TeamAboutSection = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
@@ -179,14 +179,14 @@ const TeamAboutSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h2 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
             Meet The
             <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
               {" "}
               Visionaries
             </span>
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             We're a diverse team of creators, strategists, and innovators
             passionate about bringing extraordinary brand experiences to life.
           </p>
@@ -199,14 +199,14 @@ const TeamAboutSection = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <div className="bg-white rounded-2xl p-2 shadow-lg border border-gray-200">
+          <div className="bg-card rounded-2xl p-2 shadow-lg border border-border">
             <div className="flex gap-2">
               <button
                 onClick={() => setActiveTab("about")}
                 className={`px-8 py-4 rounded-xl font-semibold transition-all duration-300 ${
                   activeTab === "about"
                     ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                    : "text-muted-foreground hover:text-foreground hover:bg-gray-50"
                 }`}
               >
                 About Us
@@ -216,7 +216,7 @@ const TeamAboutSection = () => {
                 className={`px-8 py-4 rounded-xl font-semibold transition-all duration-300 ${
                   activeTab === "team"
                     ? "bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg"
-                    : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                    : "text-muted-foreground hover:text-foreground hover:bg-gray-50"
                 }`}
               >
                 Our Team
@@ -252,10 +252,10 @@ const TeamAboutSection = () => {
                     >
                       {stat.icon}
                     </div>
-                    <div className="text-3xl font-bold text-gray-900 mb-2">
+                    <div className="text-3xl font-bold text-foreground mb-2">
                       {stat.value}
                     </div>
-                    <div className="text-gray-600 font-medium">
+                    <div className="text-muted-foreground font-medium">
                       {stat.label}
                     </div>
                   </motion.div>
@@ -269,10 +269,10 @@ const TeamAboutSection = () => {
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8, delay: 0.4 }}
                 >
-                  <h2 className="text-4xl font-bold text-gray-900 mb-6">
+                  <h2 className="text-4xl font-bold text-foreground mb-6">
                     Our Story
                   </h2>
-                  <div className="space-y-4 text-gray-600 leading-relaxed">
+                  <div className="space-y-4 text-muted-foreground leading-relaxed">
                     <p>
                       Founded in 2018, The Agency began as a small collective of
                       passionate designers and strategists who believed that
@@ -333,7 +333,7 @@ const TeamAboutSection = () => {
 
               {/* Values Section */}
               <div className="text-center">
-                <h2 className="text-4xl font-bold text-gray-900 mb-12">
+                <h2 className="text-4xl font-bold text-foreground mb-12">
                   Our Values
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -359,7 +359,7 @@ const TeamAboutSection = () => {
                   ].map((value, index) => (
                     <motion.div
                       key={index}
-                      className="p-8 bg-white rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300"
+                      className="p-8 bg-card rounded-2xl shadow-lg border border-border hover:shadow-xl transition-shadow duration-300"
                       initial={{ opacity: 0, y: 30 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 + 0.8, duration: 0.6 }}
@@ -368,10 +368,10 @@ const TeamAboutSection = () => {
                       <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-white">
                         {value.icon}
                       </div>
-                      <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                      <h3 className="text-2xl font-bold text-foreground mb-4">
                         {value.title}
                       </h3>
-                      <p className="text-gray-600 leading-relaxed">
+                      <p className="text-muted-foreground leading-relaxed">
                         {value.description}
                       </p>
                     </motion.div>
@@ -399,7 +399,7 @@ const TeamAboutSection = () => {
                     onClick={() => setSelectedMember(member)}
                     whileHover={{ y: -10 }}
                   >
-                    <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
+                    <div className="bg-card rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300">
                       <div className="aspect-square overflow-hidden">
                         <img
                           src={member.image}
@@ -408,7 +408,7 @@ const TeamAboutSection = () => {
                         />
                       </div>
                       <div className="p-6">
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        <h3 className="text-xl font-bold text-foreground mb-2">
                           {member.name}
                         </h3>
                         <p className="text-purple-600 font-semibold mb-4">
@@ -416,23 +416,23 @@ const TeamAboutSection = () => {
                         </p>
                         <div className="flex gap-3">
                           {member.socials.linkedin && (
-                            <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-purple-100 transition-colors">
-                              <Linkedin className="w-4 h-4 text-gray-600" />
+                            <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors">
+                              <Linkedin className="w-4 h-4 text-muted-foreground" />
                             </div>
                           )}
                           {member.socials.twitter && (
-                            <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-purple-100 transition-colors">
-                              <Twitter className="w-4 h-4 text-gray-600" />
+                            <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors">
+                              <Twitter className="w-4 h-4 text-muted-foreground" />
                             </div>
                           )}
                           {member.socials.instagram && (
-                            <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-purple-100 transition-colors">
-                              <Instagram className="w-4 h-4 text-gray-600" />
+                            <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors">
+                              <Instagram className="w-4 h-4 text-muted-foreground" />
                             </div>
                           )}
                           {member.socials.email && (
-                            <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-purple-100 transition-colors">
-                              <Mail className="w-4 h-4 text-gray-600" />
+                            <div className="w-8 h-8 bg-muted rounded-lg flex items-center justify-center hover:bg-purple-100 dark:hover:bg-purple-900/40 transition-colors">
+                              <Mail className="w-4 h-4 text-muted-foreground" />
                             </div>
                           )}
                         </div>
@@ -476,13 +476,13 @@ const TeamAboutSection = () => {
                   />
                 </div>
                 <div className="md:w-2/3">
-                  <h2 className="text-3xl font-bold text-gray-900 mb-2">
+                  <h2 className="text-3xl font-bold text-foreground mb-2">
                     {selectedMember.name}
                   </h2>
                   <p className="text-purple-600 font-semibold text-lg mb-6">
                     {selectedMember.role}
                   </p>
-                  <p className="text-gray-600 leading-relaxed mb-6">
+                  <p className="text-muted-foreground leading-relaxed mb-6">
                     {selectedMember.bio}
                   </p>
                   <div className="flex gap-4">
