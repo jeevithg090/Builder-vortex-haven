@@ -130,28 +130,27 @@ const ParallaxVision = () => {
             className="space-y-8"
           >
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight">
-              A more engaging way to get together.
+              Closer collaboration, wherever you are.
             </h2>
 
             <div className="max-w-3xl">
-              <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
-                Apple Vision Pro makes it easy to collaborate and connect
-                wherever you are. You can see FaceTime participants in life-size
-                video tiles, or you can choose to use your spatial Persona and
-                feel like you are sharing the same space with others. And use
-                SharePlay to watch, listen, and play together with your favorite
-                people.
+              <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 leading-relaxed">
+                We work as an extension of your team. Shared boards, weekly
+                walkthroughs and live design reviews keep everyone looking at
+                the same thing, so feedback lands faster and decisions stick —
+                whether we&apos;re in the same room or six time zones apart.
               </p>
             </div>
 
-            <motion.button
+            <motion.a
+              href="#team-about"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
+              className="inline-flex items-center gap-3 bg-orange-700 hover:bg-orange-800 text-white font-semibold px-8 py-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl"
             >
-              <span>Learn more about connection</span>
-              <Plus className="w-5 h-5" />
-            </motion.button>
+              <span>Meet the team</span>
+              <Plus className="w-5 h-5" aria-hidden="true" />
+            </motion.a>
           </motion.div>
         </div>
       </section>
