@@ -1,26 +1,35 @@
-import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { usePageTitle } from "@/lib/usePageTitle";
 
 const NotFound = () => {
   const location = useLocation();
+  usePageTitle("Page not found");
 
   useEffect(() => {
-    console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname,
-    );
+    if (import.meta.env.DEV) {
+      console.warn("404: no route matches", location.pathname);
+    }
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <main className="min-h-screen flex items-center justify-center bg-background px-4 text-foreground">
       <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">404</h1>
-        <p className="text-xl text-gray-600 mb-4">Oops! Page not found</p>
-        <a href="/" className="text-blue-500 hover:text-blue-700 underline">
-          Return to Home
-        </a>
+        <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-brand-purple">
+          Error 404
+        </p>
+        <h1 className="mb-4 text-4xl font-bold">Page not found</h1>
+        <p className="mb-8 text-lg text-muted-foreground">
+          The page you are looking for doesn&apos;t exist or has been moved.
+        </p>
+        <Link
+          to="/"
+          className="inline-block rounded-xl bg-brand-purple px-6 py-3 font-semibold text-white transition-colors hover:bg-brand-purple/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          Return to home
+        </Link>
       </div>
-    </div>
+    </main>
   );
 };
 
