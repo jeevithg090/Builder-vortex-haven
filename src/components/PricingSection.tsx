@@ -2,55 +2,65 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Check } from "lucide-react";
 
-const pricingPlans = [
+interface PricingPlan {
+  id: number;
+  name: string;
+  capacity: string;
+  description: string;
+  price: string;
+  isPopular: boolean;
+  features: string[];
+}
+
+const pricingPlans: PricingPlan[] = [
   {
     id: 1,
     name: "Starter",
-    orderCapacity: "Up to 1,000 orders per month",
+    capacity: "1 active project at a time",
     description:
-      "Perfect for new sellers just starting their Amazon journey. Get all essential features to manage your first reviews effectively.",
-    price: "$15.99",
+      "For founders and small teams who need a sharp brand foundation and a focused partner to get their first launch out the door.",
+    price: "$1,500",
     isPopular: false,
     features: [
-      "Dashboard Access",
-      "Basic Analytics",
-      "Email Support",
-      "Review Automation",
-      "Customer Templates",
+      "Brand & visual identity refresh",
+      "Landing page design",
+      "Monthly strategy call",
+      "Email support",
+      "2 revision rounds per deliverable",
     ],
   },
   {
     id: 2,
     name: "Growth",
-    orderCapacity: "Up to 2,500 orders per month",
+    capacity: "Up to 3 active projects",
     description:
-      "Are growing and scaling operations. Ideal for sellers who are expanding their product range and need more review automation.",
-    price: "$29.99",
+      "For growing companies that need design, web and marketing working together, with a dedicated team that knows the brand.",
+    price: "$3,500",
     isPopular: true,
     features: [
       "Everything in Starter",
-      "Advanced Analytics",
-      "Priority Support",
-      "Custom Branding",
-      "A/B Testing",
-      "API Access",
+      "Multi-page website design & build",
+      "Social & campaign creative",
+      "Bi-weekly check-ins",
+      "Priority support",
+      "Analytics reporting",
     ],
   },
   {
     id: 3,
     name: "Pro",
-    orderCapacity: "Up to 10,000 orders per month",
+    capacity: "Unlimited requests, prioritised weekly",
     description:
-      "For established sellers managing high volumes. Get enterprise-level features and dedicated support for your growing business.",
-    price: "$59.99",
+      "For established brands that want an embedded creative partner across every channel, with senior attention on every project.",
+    price: "$7,500",
     isPopular: false,
     features: [
       "Everything in Growth",
-      "Dedicated Account Manager",
-      "Custom Integrations",
-      "White-label Solution",
-      "Advanced Reporting",
-      "24/7 Phone Support",
+      "Dedicated creative director",
+      "Product & UX design",
+      "Video & motion content",
+      "Quarterly brand workshops",
+      "Same-day response times",
     ],
   },
 ];
@@ -72,13 +82,16 @@ const PricingSection = () => {
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
         >
-          <p className="text-xl text-gray-700 dark:text-gray-300 max-w-4xl mx-auto mb-4">
-            Choose a plan based on your monthly order volume. Whether you're
-            just starting out or scaling up, find a plan that fits your growth
-            and unlock the full power of our all-in-one platform.
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+            Simple, transparent pricing
+          </h2>
+          <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-3xl mx-auto mb-4">
+            Pick a monthly retainer that matches how much you need from us.
+            Every plan includes a dedicated team, clear timelines and no
+            long-term lock-in.
           </p>
-          <p className="text-xl font-semibold text-gray-900 dark:text-white">
-            Starting from just $15.99 per month.
+          <p className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white">
+            Retainers start at $1,500 per month.
           </p>
         </motion.div>
 
@@ -107,7 +120,7 @@ const PricingSection = () => {
                   animate={isInView ? { opacity: 1, scale: 1 } : {}}
                   transition={{ delay: 0.5 + index * 0.2, duration: 0.5 }}
                 >
-                  <div className="bg-vibrant-pink text-white text-xs font-bold py-2 px-4 rounded-full uppercase tracking-wide">
+                  <div className="bg-pink-700 text-white text-xs font-bold py-2 px-4 rounded-full uppercase tracking-wide">
                     Most Popular
                   </div>
                 </motion.div>
@@ -120,11 +133,11 @@ const PricingSection = () => {
 
               {/* Order Capacity */}
               <p className="text-gray-600 dark:text-gray-400 mb-4">
-                {plan.orderCapacity}
+                {plan.capacity}
               </p>
 
               {/* Description */}
-              <p className="text-gray-500 dark:text-gray-500 text-sm mb-8 leading-relaxed">
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-8 leading-relaxed">
                 {plan.description}
               </p>
 
@@ -133,7 +146,7 @@ const PricingSection = () => {
                 <span className="text-5xl font-bold text-gray-900 dark:text-white">
                   {plan.price}
                 </span>
-                <span className="text-gray-500 dark:text-gray-400 text-sm ml-2">
+                <span className="text-gray-600 dark:text-gray-400 text-sm ml-2">
                   per month
                 </span>
               </div>
@@ -155,7 +168,10 @@ const PricingSection = () => {
                         duration: 0.5,
                       }}
                     >
-                      <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
+                      <Check
+                        className="w-5 h-5 text-green-500 mr-3 flex-shrink-0"
+                        aria-hidden="true"
+                      />
                       <span className="text-sm">{feature}</span>
                     </motion.li>
                   ))}
@@ -163,13 +179,15 @@ const PricingSection = () => {
               </div>
 
               {/* CTA Button */}
-              <motion.button
-                className="w-full bg-brand-purple hover:bg-brand-purple/90 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 uppercase tracking-wide"
+              <motion.a
+                href="#contact"
+                aria-label={`Get started with the ${plan.name} plan`}
+                className="block w-full text-center bg-brand-purple hover:bg-brand-purple/90 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 uppercase tracking-wide"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
                 Get Started
-              </motion.button>
+              </motion.a>
             </motion.div>
           ))}
         </div>
@@ -184,13 +202,14 @@ const PricingSection = () => {
           <p className="text-gray-600 dark:text-gray-400 mb-4">
             Need a custom solution for your enterprise?
           </p>
-          <motion.button
-            className="text-brand-purple hover:text-brand-purple/80 font-semibold transition-colors"
+          <motion.a
+            href="#contact"
+            className="inline-block text-brand-purple hover:text-brand-purple/80 dark:text-light-purple dark:hover:text-light-purple/80 font-semibold transition-colors"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
             Contact our sales team →
-          </motion.button>
+          </motion.a>
         </motion.div>
       </div>
     </section>
