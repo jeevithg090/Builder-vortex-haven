@@ -1,12 +1,62 @@
-import { useState, useEffect, useRef } from "react";
+import { useMemo, useRef, useState, type MouseEvent } from "react";
 import { motion } from "framer-motion";
 
 // Car shape component that responds to mouse proximity
-const CarObject = ({ x, y, color, rotation, mousePos }: any) => {
-  const carX =
-    (x / 100) * (typeof window !== "undefined" ? window.innerWidth : 1920);
-  const carY =
-    (y / 100) * (typeof window !== "undefined" ? window.innerHeight : 1080);
+interface Point {
+  x: number;
+  y: number;
+}
+
+interface Car {
+  id: number;
+  /** Horizontal position, as a percentage of the container width. */
+  x: number;
+  /** Vertical position, as a percentage of the container height. */
+  y: number;
+  color: string;
+  rotation: number;
+}
+
+interface Ripple extends Point {
+  id: number;
+}
+
+const CAR_COUNT = 30;
+const CAR_COLORS = ["#0000FF", "#000000", "#CCCCCC", "#FF0000", "#00FF00"];
+
+/** Places cars in a loose ring around the centre of the container. */
+const createCars = (): Car[] =>
+  Array.from({ length: CAR_COUNT }, (_, i) => {
+    const angle = (i / CAR_COUNT) * Math.PI * 2;
+    const radius = Math.random() * 25 + 5; // 5%-30% from centre
+    const centerX = 50 + Math.cos(angle) * radius;
+    const centerY = 50 + Math.sin(angle) * radius;
+
+    return {
+      id: i,
+      x: Math.max(10, Math.min(90, centerX)),
+      y: Math.max(10, Math.min(90, centerY)),
+      color: CAR_COLORS[Math.floor(Math.random() * CAR_COLORS.length)],
+      rotation: Math.random() * 360,
+    };
+  });
+
+interface CarObjectProps extends Omit<Car, "id"> {
+  mousePos: Point;
+  containerSize: { width: number; height: number };
+}
+
+// Car shape component that responds to mouse proximity
+const CarObject = ({
+  x,
+  y,
+  color,
+  rotation,
+  mousePos,
+  containerSize,
+}: CarObjectProps) => {
+  const carX = (x / 100) * containerSize.width;
+  const carY = (y / 100) * containerSize.height;
 
   // Calculate distance from mouse to car
   const distance = Math.sqrt(
@@ -110,7 +160,7 @@ const CarObject = ({ x, y, color, rotation, mousePos }: any) => {
 };
 
 // Ripple effect component
-const RippleEffect = ({ x, y }: any) => {
+const RippleEffect = ({ x, y }: Point) => {
   return (
     <motion.div
       className="absolute pointer-events-none"
@@ -138,32 +188,19 @@ const StrikingBackground = () => {
     x: typeof window !== "undefined" ? window.innerWidth / 2 : 960,
     y: typeof window !== "undefined" ? window.innerHeight / 2 : 540,
   });
-  const [ripples, setRipples] = useState<any[]>([]);
-  const [isMouseMoving, setIsMouseMoving] = useState(false);
+  const [containerSize, setContainerSize] = useState(() => ({
+    width: typeof window !== "undefined" ? window.innerWidth : 1920,
+    height: typeof window !== "undefined" ? window.innerHeight : 1080,
+  }));
+  const [ripples, setRipples] = useState<Ripple[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const rippleId = useRef(0);
-  const mouseTimeoutRef = useRef<NodeJS.Timeout>();
 
-  // Generate car objects concentrated in center with gentle spread
-  const carObjects = Array.from({ length: 30 }, (_, i) => {
-    // Create a concentrated distribution around center (50%, 50%)
-    const angle = (i / 30) * Math.PI * 2; // Distribute in a circle
-    const radius = Math.random() * 25 + 5; // Radius between 5% and 30% from center
-    const centerX = 50 + Math.cos(angle) * radius;
-    const centerY = 50 + Math.sin(angle) * radius;
+  // Generated once: regenerating on every render made the cars jump around
+  // each time the mouse moved.
+  const carObjects = useMemo(createCars, []);
 
-    return {
-      id: i,
-      x: Math.max(10, Math.min(90, centerX)), // Keep within 10%-90% bounds
-      y: Math.max(10, Math.min(90, centerY)), // Keep within 10%-90% bounds
-      color: ["#0000FF", "#000000", "#CCCCCC", "#FF0000", "#00FF00"][
-        Math.floor(Math.random() * 5)
-      ],
-      rotation: Math.random() * 360, // Random initial rotation
-    };
-  });
-
-  const handleMouseMove = (e: React.MouseEvent) => {
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
 
     const rect = containerRef.current.getBoundingClientRect();
@@ -171,17 +208,11 @@ const StrikingBackground = () => {
     const y = e.clientY - rect.top;
 
     setMousePos({ x, y });
-    setIsMouseMoving(true);
-
-    // Clear existing timeout
-    if (mouseTimeoutRef.current) {
-      clearTimeout(mouseTimeoutRef.current);
-    }
-
-    // Set timeout to stop movement detection
-    mouseTimeoutRef.current = setTimeout(() => {
-      setIsMouseMoving(false);
-    }, 200);
+    setContainerSize((size) =>
+      size.width === rect.width && size.height === rect.height
+        ? size
+        : { width: rect.width, height: rect.height },
+    );
 
     // Create ripple effect less frequently for better performance
     if (Math.random() > 0.7) {
@@ -202,15 +233,6 @@ const StrikingBackground = () => {
     }
   };
 
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (mouseTimeoutRef.current) {
-        clearTimeout(mouseTimeoutRef.current);
-      }
-    };
-  }, []);
-
   return (
     <div
       ref={containerRef}
@@ -220,7 +242,7 @@ const StrikingBackground = () => {
       {/* Animated background pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute inset-0 bg-gradient-radial from-purple-900/20 via-transparent to-blue-900/20 animate-pulse" />
-        <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5" />
+        <div className="absolute inset-0 bg-noise opacity-5" />
       </div>
 
       {/* Car objects */}
@@ -232,6 +254,7 @@ const StrikingBackground = () => {
           color={obj.color}
           rotation={obj.rotation}
           mousePos={mousePos}
+          containerSize={containerSize}
         />
       ))}
 
@@ -268,7 +291,7 @@ const StrikingBackground = () => {
           transition={{ duration: 1, delay: 0.5 }}
           className="text-center text-white max-w-4xl px-8"
         >
-          <motion.h1
+          <motion.h2
             className="text-6xl md:text-8xl font-black mb-8 tracking-tight"
             animate={{
               textShadow: [
@@ -284,7 +307,7 @@ const StrikingBackground = () => {
             }}
           >
             STRIKING
-          </motion.h1>
+          </motion.h2>
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.8 }}

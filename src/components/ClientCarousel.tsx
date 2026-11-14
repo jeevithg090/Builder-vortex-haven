@@ -124,7 +124,7 @@ const ClientCarousel = () => {
                 exit={{ opacity: 0, x: -300 }}
                 transition={{ duration: 0.6, ease: "easeInOut" }}
               >
-                {clientImages.map((image, index) => {
+                {clientImages.map((_, index) => {
                   const displayIndex =
                     (currentIndex + index) % clientImages.length;
                   const currentImage = clientImages[displayIndex];
@@ -248,6 +248,7 @@ const ClientCarousel = () => {
 
           {/* Navigation Arrows */}
           <button
+            aria-label="Previous"
             onClick={prevSlide}
             className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-background/80 backdrop-blur-sm border border-border rounded-full flex items-center justify-center text-foreground hover:bg-purple-500 hover:text-white transition-all duration-300 shadow-lg"
           >
@@ -255,6 +256,7 @@ const ClientCarousel = () => {
           </button>
 
           <button
+            aria-label="Next"
             onClick={nextSlide}
             className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-background/80 backdrop-blur-sm border border-border rounded-full flex items-center justify-center text-foreground hover:bg-purple-500 hover:text-white transition-all duration-300 shadow-lg"
           >

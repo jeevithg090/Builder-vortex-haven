@@ -1,46 +1,64 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const Loader = ({ onLoadComplete }: { onLoadComplete: () => void }) => {
+import { BAR_MAX_WIDTH_PX, getLoaderProgress } from "@/lib/loader";
+
+interface LoaderProps {
+  onLoadComplete: () => void;
+}
+
+const Loader = ({ onLoadComplete }: LoaderProps) => {
   const [animationPhase, setAnimationPhase] = useState(1);
   const [progress, setProgress] = useState(0);
   const [barWidth, setBarWidth] = useState(0);
 
   useEffect(() => {
-    // Phase 1: Linear progress bar grows from 0 to 100
-    const startTime = Date.now();
-    const duration = 1500; // 1.5 seconds total (faster)
+    // Phase 1: linear progress bar grows from 0 to 100, then the bar
+    // "breaks" through phases 2-5 before handing off to the page.
+    const startTime = performance.now();
+    const timeouts: number[] = [];
+    let frameId = 0;
 
-    const updateProgress = () => {
-      const elapsed = Date.now() - startTime;
-      const normalizedTime = Math.min(elapsed / duration, 1);
-
-      // Linear progress (no curve)
-      const currentProgress = Math.floor(normalizedTime * 100);
-
-      setProgress(currentProgress);
-      setBarWidth(normalizedTime * 200); // Bar width grows to 200px linearly
-
-      if (normalizedTime < 1) {
-        requestAnimationFrame(updateProgress);
-      } else {
-        // Progress complete, start breaking animation
-        setTimeout(() => setAnimationPhase(2), 100); // Break and rotate
-        setTimeout(() => setAnimationPhase(3), 300); // L comes outward
-        setTimeout(() => setAnimationPhase(4), 600); // Final horizontal bar
-        setTimeout(() => {
-          setAnimationPhase(5);
-          setTimeout(onLoadComplete, 200);
-        }, 900);
-      }
+    const schedule = (callback: () => void, delay: number) => {
+      timeouts.push(window.setTimeout(callback, delay));
     };
 
-    updateProgress();
+    const updateProgress = (now: number) => {
+      const normalizedTime = getLoaderProgress(now - startTime);
+
+      setProgress(Math.floor(normalizedTime * 100));
+      setBarWidth(normalizedTime * BAR_MAX_WIDTH_PX);
+
+      if (normalizedTime < 1) {
+        frameId = requestAnimationFrame(updateProgress);
+        return;
+      }
+
+      schedule(() => setAnimationPhase(2), 100); // Break and rotate
+      schedule(() => setAnimationPhase(3), 300); // L comes outward
+      schedule(() => setAnimationPhase(4), 600); // Final horizontal bar
+      schedule(() => {
+        setAnimationPhase(5);
+        schedule(onLoadComplete, 200);
+      }, 900);
+    };
+
+    frameId = requestAnimationFrame(updateProgress);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+      timeouts.forEach((id) => window.clearTimeout(id));
+    };
   }, [onLoadComplete]);
 
   return (
     <AnimatePresence mode="wait">
       <motion.div
+        role="progressbar"
+        aria-label="Loading site"
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-valuenow={progress}
         className="fixed inset-0 z-50 bg-background overflow-hidden flex items-center justify-center"
         initial={{ opacity: 1 }}
         exit={{ opacity: 0 }}

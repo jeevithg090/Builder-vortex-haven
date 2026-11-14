@@ -1,14 +1,19 @@
 import { useState, useEffect, useRef } from "react";
-import {
-  motion,
-  useInView,
-  useScroll,
-  useTransform,
-  AnimatePresence,
-} from "framer-motion";
-import { Play, Star, Award, Zap, Users } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { Play, Star, Award } from "lucide-react";
 
-const testimonials = [
+interface Testimonial {
+  id: number;
+  text: string;
+  author: string;
+  company: string;
+  role: string;
+  videoThumbnail: boolean;
+  rating: number;
+  project: string;
+}
+
+const testimonials: Testimonial[] = [
   {
     id: 1,
     text: "The Agency transformed our entire brand identity. Their strategic approach and creative vision resulted in a 400% increase in brand recognition. The team's attention to detail and innovative designs exceeded all our expectations.",
@@ -71,46 +76,8 @@ const testimonials = [
   },
 ];
 
-const TypewriterText = ({
-  text,
-  delay = 0,
-}: {
-  text: string;
-  delay?: number;
-}) => {
-  const [displayText, setDisplayText] = useState("");
-  const [showCursor, setShowCursor] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowCursor(true);
-      let i = 0;
-      const typewriterTimer = setInterval(() => {
-        if (i < text.length) {
-          setDisplayText(text.slice(0, i + 1));
-          i++;
-        } else {
-          clearInterval(typewriterTimer);
-        }
-      }, 50);
-
-      return () => clearInterval(typewriterTimer);
-    }, delay);
-
-    return () => clearTimeout(timer);
-  }, [text, delay]);
-
-  return (
-    <span className="relative">
-      {displayText}
-      {showCursor && <span className="animate-blink ml-1 text-white">|</span>}
-    </span>
-  );
-};
-
 const TestimonialsSection = () => {
-  const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: false, margin: "-100px" });
+  const containerRef = useRef<HTMLElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [currentPhase, setCurrentPhase] = useState<
     "intro" | "split" | "fullscreen"
@@ -164,7 +131,6 @@ const TestimonialsSection = () => {
 
   return (
     <section
-      id="testimonials"
       className="relative h-[400vh] bg-gradient-to-br from-gray-900 via-purple-900 to-black overflow-hidden"
       ref={containerRef}
     >
@@ -216,9 +182,9 @@ const TestimonialsSection = () => {
                   <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-purple-500"></div>
                 </div>
 
-                <h1 className="text-5xl md:text-7xl font-bold text-white mb-6">
+                <h2 className="text-5xl md:text-7xl font-bold text-white mb-6">
                   Trusted by Industry Leaders
-                </h1>
+                </h2>
                 <p className="text-xl text-gray-300 mb-8">
                   Scroll down to experience testimonials in an immersive way
                 </p>
@@ -476,9 +442,19 @@ const TestimonialsSection = () => {
 };
 
 // Enhanced Testimonial Card Component
-const TestimonialCard = ({ testimonial, index, isInView, isActive }: any) => {
-  const [isVideoOpen, setIsVideoOpen] = useState(false);
+interface TestimonialCardProps {
+  testimonial: Testimonial;
+  index: number;
+  isInView: boolean;
+  isActive: boolean;
+}
 
+const TestimonialCard = ({
+  testimonial,
+  index,
+  isInView,
+  isActive,
+}: TestimonialCardProps) => {
   return (
     <motion.div
       className={`bg-white/10 backdrop-blur-sm rounded-2xl p-6 border transition-all duration-500 hover:bg-white/15 group ${

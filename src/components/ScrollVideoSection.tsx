@@ -1,4 +1,11 @@
 import { useState, useEffect, useRef } from "react";
+import { useEscapeKey } from "@/lib/useEscapeKey";
+import {
+  SCROLL_TO_TOP_THRESHOLD,
+  getOverlayVisibility,
+  pruneDismissed,
+  type VideoOverlay,
+} from "@/lib/videoOverlays";
 import {
   motion,
   useScroll,
@@ -44,39 +51,29 @@ const ScrollVideoSection = () => {
     offset: ["start center", "end center"],
   });
 
-  // Enhanced scroll tracking with multiple triggers and auto-dismiss
+  // Overlay visibility is derived purely from scroll progress (no timers),
+  // so popups can't get stuck on screen after a fast scroll.
+  const dismissedRef = useRef<Set<VideoOverlay>>(new Set());
+  const [showScrollHint, setShowScrollHint] = useState(false);
+
+  const applyOverlayVisibility = (progress: number) => {
+    dismissedRef.current = pruneDismissed(progress, dismissedRef.current);
+    const visibility = getOverlayVisibility(progress, dismissedRef.current);
+    setShowScrollHint(visibility.scrollHint);
+    setShowTestimonialPopup(visibility.testimonial);
+    setShowStatsPopup(visibility.stats);
+    setShowActionPanel(visibility.actionPanel);
+  };
+
+  const dismissOverlay = (overlay: VideoOverlay) => {
+    dismissedRef.current = new Set(dismissedRef.current).add(overlay);
+    applyOverlayVisibility(scrollYProgress.get());
+  };
+
   useMotionValueEvent(scrollYProgress, "change", (latest) => {
     setScrollProgress(latest);
-
-    // Show scroll to top button
-    setShowScrollToTop(latest > 0.3);
-
-    // Trigger testimonial popup at specific scroll points
-    if (latest > 0.4 && latest < 0.5 && !showTestimonialPopup) {
-      setTimeout(() => setShowTestimonialPopup(true), 500);
-    }
-    // Auto-dismiss testimonial popup when scrolling past its zone
-    if ((latest <= 0.4 || latest >= 0.6) && showTestimonialPopup) {
-      setShowTestimonialPopup(false);
-    }
-
-    // Trigger stats popup
-    if (latest > 0.6 && latest < 0.7 && !showStatsPopup) {
-      setTimeout(() => setShowStatsPopup(true), 800);
-    }
-    // Auto-dismiss stats popup when scrolling past its zone
-    if ((latest <= 0.6 || latest >= 0.8) && showStatsPopup) {
-      setShowStatsPopup(false);
-    }
-
-    // Show action panel
-    if (latest > 0.8) {
-      setShowActionPanel(true);
-    }
-    // Auto-dismiss action panel when scrolling back up
-    if (latest <= 0.7 && showActionPanel) {
-      setShowActionPanel(false);
-    }
+    setShowScrollToTop(latest > SCROLL_TO_TOP_THRESHOLD);
+    applyOverlayVisibility(latest);
   });
 
   // Enhanced video animations
@@ -173,12 +170,10 @@ const ScrollVideoSection = () => {
     document.body.style.overflow = "unset";
   };
 
+  useEscapeKey(showVideoModal, closeVideoModal);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const nextTestimonial = () => {
-    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
   };
 
   useEffect(() => {
@@ -189,11 +184,13 @@ const ScrollVideoSection = () => {
 
   // Auto-cycle testimonials
   useEffect(() => {
-    if (showTestimonialPopup) {
-      const interval = setInterval(nextTestimonial, 4000);
-      return () => clearInterval(interval);
-    }
-  }, [showTestimonialPopup]);
+    if (!showTestimonialPopup) return;
+    const interval = setInterval(
+      () => setCurrentTestimonial((prev) => (prev + 1) % testimonials.length),
+      4000,
+    );
+    return () => clearInterval(interval);
+  }, [showTestimonialPopup, testimonials.length]);
 
   return (
     <>
@@ -311,8 +308,10 @@ const ScrollVideoSection = () => {
               setShowFloatingTooltip(false);
             }}
           >
-            {/* Video element */}
+            {/* Video element (sample footage without dialogue, so no captions) */}
+            {/* eslint-disable-next-line jsx-a11y/media-has-caption */}
             <video
+              aria-label="Showreel preview"
               autoPlay
               loop
               muted={isMuted}
@@ -407,6 +406,7 @@ const ScrollVideoSection = () => {
                 >
                   <div className="flex gap-2">
                     <button
+                      aria-label={isMuted ? "Unmute video" : "Mute video"}
                       onClick={() => setIsMuted(!isMuted)}
                       className="w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors"
                     >
@@ -417,6 +417,7 @@ const ScrollVideoSection = () => {
                       )}
                     </button>
                     <button
+                      aria-label={liked ? "Unlike" : "Like"}
                       onClick={() => setLiked(!liked)}
                       className="w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors"
                     >
@@ -427,10 +428,14 @@ const ScrollVideoSection = () => {
                   </div>
 
                   <div className="flex gap-2">
-                    <button className="w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors">
+                    <button
+                      aria-label="Share"
+                      className="w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+                    >
                       <Share2 className="w-5 h-5" />
                     </button>
                     <button
+                      aria-label="Fullscreen"
                       onClick={openVideoModal}
                       className="w-10 h-10 bg-black/50 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-black/70 transition-colors"
                     >
@@ -521,7 +526,7 @@ const ScrollVideoSection = () => {
 
         {/* Floating Scroll Down Indicator */}
         <AnimatePresence>
-          {scrollProgress < 0.1 && (
+          {showScrollHint && (
             <motion.div
               className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-30"
               initial={{ opacity: 0, y: 20 }}
@@ -547,6 +552,7 @@ const ScrollVideoSection = () => {
       <AnimatePresence>
         {showScrollToTop && (
           <motion.button
+            aria-label="Back to top"
             onClick={scrollToTop}
             className="fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 text-white rounded-full shadow-xl z-40 flex items-center justify-center hover:shadow-2xl transition-shadow"
             initial={{ opacity: 0, scale: 0.5, y: 50 }}
@@ -571,7 +577,8 @@ const ScrollVideoSection = () => {
             transition={{ type: "spring", damping: 20 }}
           >
             <button
-              onClick={() => setShowTestimonialPopup(false)}
+              aria-label="Dismiss testimonial"
+              onClick={() => dismissOverlay("testimonial")}
               className="absolute top-4 right-4 w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-200"
             >
               <X className="w-4 h-4" />
@@ -627,7 +634,8 @@ const ScrollVideoSection = () => {
             transition={{ type: "spring", damping: 20, delay: 0.5 }}
           >
             <button
-              onClick={() => setShowStatsPopup(false)}
+              aria-label="Dismiss stats"
+              onClick={() => dismissOverlay("stats")}
               className="absolute top-4 right-4 w-8 h-8 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30"
             >
               <X className="w-4 h-4" />
@@ -666,13 +674,22 @@ const ScrollVideoSection = () => {
             exit={{ opacity: 0, x: 100 }}
           >
             <div className="flex flex-col gap-3">
-              <button className="w-12 h-12 bg-blue-500 text-white rounded-xl flex items-center justify-center hover:bg-blue-600 transition-colors">
+              <button
+                aria-label="Share"
+                className="w-12 h-12 bg-blue-500 text-white rounded-xl flex items-center justify-center hover:bg-blue-600 transition-colors"
+              >
                 <Share2 className="w-5 h-5" />
               </button>
-              <button className="w-12 h-12 bg-green-500 text-white rounded-xl flex items-center justify-center hover:bg-green-600 transition-colors">
+              <button
+                aria-label="Message us"
+                className="w-12 h-12 bg-green-500 text-white rounded-xl flex items-center justify-center hover:bg-green-600 transition-colors"
+              >
                 <MessageCircle className="w-5 h-5" />
               </button>
-              <button className="w-12 h-12 bg-purple-500 text-white rounded-xl flex items-center justify-center hover:bg-purple-600 transition-colors">
+              <button
+                aria-label="Team"
+                className="w-12 h-12 bg-purple-500 text-white rounded-xl flex items-center justify-center hover:bg-purple-600 transition-colors"
+              >
                 <Users className="w-5 h-5" />
               </button>
             </div>
@@ -684,6 +701,9 @@ const ScrollVideoSection = () => {
       <AnimatePresence>
         {showVideoModal && (
           <motion.div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Showreel video"
             className="fixed inset-0 z-50 flex items-center justify-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -706,13 +726,17 @@ const ScrollVideoSection = () => {
               transition={{ duration: 0.5, type: "spring", damping: 25 }}
             >
               <button
+                type="button"
+                aria-label="Close video"
                 onClick={closeVideoModal}
                 className="absolute top-6 right-6 z-10 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm transition-colors group"
               >
                 <X className="w-6 h-6 text-white group-hover:scale-110 transition-transform" />
               </button>
 
+              {/* eslint-disable-next-line jsx-a11y/media-has-caption -- sample footage has no dialogue */}
               <video
+                aria-label="Showreel"
                 autoPlay
                 controls
                 className="w-full h-full object-cover"

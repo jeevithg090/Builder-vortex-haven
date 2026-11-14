@@ -185,9 +185,9 @@ const BrandKitsWithStats = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Brand Portfolio Dashboard
-          </h1>
+          </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Manage your brand collections and track performance metrics in one
             unified interface
